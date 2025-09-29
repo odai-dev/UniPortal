@@ -1,0 +1,43 @@
+# PHP
+*.log
+*.cache
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Vendor directories
+vendor/
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Session files
+sessions/
+
+# Uploaded files (depending on your setup)
+uploads/
+
+# Composer
+composer.phar
+composer.lock
+
+# Log files
+*.log
+error_log
+access_log
