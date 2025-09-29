@@ -47,6 +47,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+**September 29, 2025 - Custom CAPTCHA Implementation**
+- Replaced Google reCAPTCHA with custom image puzzle CAPTCHA system
+- Created `custom_captcha.php` for generating and verifying puzzle challenges
+- Created `captcha_verify.php` for session-based CAPTCHA validation
+- Created `captcha.js` for interactive CAPTCHA UI with modal popup
+- Created `captcha.css` for modern purple/gradient themed CAPTCHA styling
+- Updated login.php and register.php to use custom CAPTCHA
+- CAPTCHA features: 3x3 grid, color/emoji challenges, session-based verification
+
 **September 29, 2025 - Initial Replit Setup**
 - Created PostgreSQL database and initialized schema
 - Added `remember_tokens` table for secure session management
@@ -56,7 +65,7 @@ Preferred communication style: Simple, everyday language.
 
 ## External Dependencies
 
-- **CAPTCHA Service**: PHP image captcha library (built-in)
+- **CAPTCHA Service**: Custom image puzzle CAPTCHA (session-based, no external service)
 - **Database**: PostgreSQL database server (Replit-managed)
 - **Web Server**: PHP 8.4 built-in development server
 - **Email Validation**: Gmail and Hotmail domain restrictions

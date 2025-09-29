@@ -2,7 +2,7 @@
 $page_title = 'Login';
 require_once 'config.php';
 require_once 'db.php';
-require_once 'recaptcha_verify.php';
+require_once 'captcha_verify.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
@@ -22,12 +22,12 @@ if ($_POST) {
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
+        $captcha_token = $_POST['captcha_token'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate reCAPTCHA verification
-    if (!verifyRecaptcha($recaptcha_response)) {
-        $error_message = 'Please complete the reCAPTCHA verification.';
+    // Validate custom CAPTCHA verification
+    if (!verifyCustomCaptcha($captcha_token)) {
+        $error_message = 'Please complete the CAPTCHA verification.';
     } elseif (empty($email) || empty($password)) {
         $error_message = 'Please fill in all fields.';
     } elseif (!validateEmail($email)) {
@@ -115,9 +115,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
-    
-    <!-- Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link href="captcha.css" rel="stylesheet">
 </head>
 <body>
 
@@ -176,10 +174,10 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA Verification -->
+                <!-- Custom CAPTCHA Verification -->
                 <div class="mb-3">
                     <label class="form-label">Security Verification</label>
-                    <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                    <div id="custom-captcha-container"></div>
                     <small class="form-text text-muted">Please verify that you are not a robot</small>
                 </div>
 
@@ -209,6 +207,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     </div>
 </div>
 
+<script src="captcha.js"></script>
 <script src="form-enhancements.js"></script>
 
 <!-- Bootstrap 5 JS -->
