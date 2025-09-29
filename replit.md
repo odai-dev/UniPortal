@@ -2,7 +2,9 @@
 
 ## Overview
 
-This is a University Student Portal built with PHP 8+, PDO, and MySQL. The application provides a secure authentication system with user registration, login functionality, and a dashboard for students. The system emphasizes security best practices including password hashing, prepared statements, input validation, and CAPTCHA protection.
+This is a University Student Portal built with PHP 8+, PDO, and PostgreSQL. The application provides a secure authentication system with user registration, login functionality, and a dashboard for students. The system emphasizes security best practices including password hashing, prepared statements, input validation, and CAPTCHA protection.
+
+**Current Status**: Fully configured and running in Replit environment with PostgreSQL database integration.
 
 ## User Preferences
 
@@ -38,7 +40,7 @@ Preferred communication style: Simple, everyday language.
 - **Password Policy**: Enforces inclusion of letters, numbers, and symbols
 
 ### Data Storage
-- **Primary Database**: MySQL with PDO connection layer
+- **Primary Database**: PostgreSQL with PDO connection layer
 - **Security**: All queries use prepared statements to prevent SQL injection
 - **User Data**: Stores full name, email, hashed passwords
 - **Session Storage**: PHP sessions with optional cookie persistence
@@ -46,7 +48,7 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 - **CAPTCHA Service**: Google reCAPTCHA integration or PHP image captcha library
-- **Database**: MySQL database server
+- **Database**: PostgreSQL database server
 - **Web Server**: Apache/Nginx with PHP 8+ support
 - **Email Validation**: Gmail and Hotmail domain restrictions
 - **Security Libraries**: Built-in PHP password hashing functions
