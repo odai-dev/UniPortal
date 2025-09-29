@@ -13,10 +13,15 @@ $success_message = '';
 
 // Handle form submission
 if ($_POST) {
-    $email = sanitizeInput($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $captcha = sanitizeInput($_POST['captcha'] ?? '');
-    $remember_me = isset($_POST['remember_me']);
+    // Validate CSRF token
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!validateCSRFToken($csrf_token)) {
+        $error_message = 'Invalid security token. Please refresh and try again.';
+    } else {
+        $email = sanitizeInput($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $captcha = sanitizeInput($_POST['captcha'] ?? '');
+        $remember_me = isset($_POST['remember_me']);
 
     // Validate CAPTCHA
     if (empty($captcha) || !isset($_SESSION['captcha']) || strtoupper($captcha) !== $_SESSION['captcha']) {
@@ -33,16 +38,22 @@ if ($_POST) {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
+                // Invalidate old CSRF token and regenerate session
+                invalidateCSRFToken();
+                regenerateSession();
+                
                 // Set session variables
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['name'] = $user['name'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
 
-                // Set remember me cookie if checked
+                // Set remember me cookie if checked (more secure)
                 if ($remember_me) {
-                    $cookie_value = base64_encode($user['id'] . ':' . hash('sha256', $user['password']));
-                    setcookie('remember_me', $cookie_value, time() + REMEMBER_ME_DURATION, '/');
+                    $token = generateRememberToken($user['id']);
+                    if ($token) {
+                        setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                    }
                 }
 
                 header('Location: dashboard.php');
@@ -54,36 +65,30 @@ if ($_POST) {
             $error_message = 'Database error occurred. Please try again.';
         }
     }
+    }
 }
 
 // Check for remember me cookie
 if (!isLoggedIn() && isset($_COOKIE['remember_me'])) {
-    $cookie_data = base64_decode($_COOKIE['remember_me']);
-    $parts = explode(':', $cookie_data);
+    $token = $_COOKIE['remember_me'];
+    $user_data = validateRememberToken($token);
     
-    if (count($parts) === 2) {
-        $user_id = $parts[0];
-        $password_hash = $parts[1];
+    if ($user_data) {
+        // Invalidate old CSRF token and regenerate session for auto-login
+        invalidateCSRFToken();
+        regenerateSession();
         
-        try {
-            $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE id = ?");
-            $stmt->execute([$user_id]);
-            $user = $stmt->fetch();
-            
-            if ($user && hash('sha256', $user['password']) === $password_hash) {
-                // Auto login
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
-                
-                header('Location: dashboard.php');
-                exit();
-            }
-        } catch (PDOException $e) {
-            // Remove invalid cookie
-            setcookie('remember_me', '', time() - 3600, '/');
-        }
+        // Auto login
+        $_SESSION['user_id'] = $user_data['user_id'];
+        $_SESSION['name'] = $user_data['name'];
+        $_SESSION['email'] = $user_data['email'];
+        $_SESSION['role'] = $user_data['role'];
+        
+        header('Location: dashboard.php');
+        exit();
+    } else {
+        // Remove invalid cookie
+        setcookie('remember_me', '', time() - 3600, '/', '', false, true);
     }
 }
 
@@ -135,6 +140,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
             <?php endif; ?>
 
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
                     <div class="input-group">

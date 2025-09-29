@@ -5,9 +5,14 @@
 define('SITE_NAME', 'University Student Portal');
 define('SITE_URL', 'http://localhost:5000');
 
-// Session settings
+// Session settings - Fixed for security
 define('SESSION_TIMEOUT', 3600); // 1 hour
 define('REMEMBER_ME_DURATION', 2592000); // 30 days
+
+// Security settings
+define('CSRF_TOKEN_EXPIRE', 3600); // 1 hour
+define('MAX_LOGIN_ATTEMPTS', 5);
+define('LOGIN_LOCKOUT_TIME', 900); // 15 minutes
 
 // CAPTCHA settings (using simple PHP image captcha)
 define('CAPTCHA_LENGTH', 5);

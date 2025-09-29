@@ -13,12 +13,17 @@ $success_message = '';
 
 // Handle form submission
 if ($_POST) {
-    $name = sanitizeInput($_POST['name'] ?? '');
-    $email = sanitizeInput($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
-    $captcha = sanitizeInput($_POST['captcha'] ?? '');
-    $remember_me = isset($_POST['remember_me']);
+    // Validate CSRF token
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!validateCSRFToken($csrf_token)) {
+        $error_message = 'Invalid security token. Please refresh and try again.';
+    } else {
+        $name = sanitizeInput($_POST['name'] ?? '');
+        $email = sanitizeInput($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+        $captcha = sanitizeInput($_POST['captcha'] ?? '');
+        $remember_me = isset($_POST['remember_me']);
 
     // Validate CAPTCHA
     if (empty($captcha) || !isset($_SESSION['captcha']) || strtoupper($captcha) !== $_SESSION['captcha']) {
@@ -52,13 +57,19 @@ if ($_POST) {
                 
                 // Auto-login if remember me is checked
                 if ($remember_me) {
+                    // Invalidate old CSRF token and regenerate session
+                    invalidateCSRFToken();
+                    regenerateSession();
+                    
                     $_SESSION['user_id'] = $user_id;
                     $_SESSION['name'] = $name;
                     $_SESSION['email'] = $email;
                     $_SESSION['role'] = 'student';
                     
-                    $cookie_value = base64_encode($user_id . ':' . hash('sha256', $hashed_password));
-                    setcookie('remember_me', $cookie_value, time() + REMEMBER_ME_DURATION, '/');
+                    $token = generateRememberToken($user_id);
+                    if ($token) {
+                        setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                    }
                     
                     header('Location: dashboard.php');
                     exit();
@@ -71,6 +82,7 @@ if ($_POST) {
         } catch (PDOException $e) {
             $error_message = 'Database error occurred. Please try again.';
         }
+    }
     }
 }
 ?>
@@ -110,6 +122,7 @@ if ($_POST) {
             <?php endif; ?>
 
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
                     <div class="input-group">
