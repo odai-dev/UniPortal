@@ -17,10 +17,10 @@ define('CSRF_TOKEN_EXPIRE', 3600); // 1 hour
 define('MAX_LOGIN_ATTEMPTS', 5);
 define('LOGIN_LOCKOUT_TIME', 900); // 15 minutes
 
-// CAPTCHA settings (using simple PHP image captcha)
-define('CAPTCHA_LENGTH', 5);
-define('CAPTCHA_WIDTH', 120);
-define('CAPTCHA_HEIGHT', 40);
+// Google reCAPTCHA v2 settings
+define('RECAPTCHA_SITE_KEY', $_ENV['RECAPTCHA_SITE_KEY'] ?? '');
+define('RECAPTCHA_SECRET_KEY', $_ENV['RECAPTCHA_SECRET_KEY'] ?? '');
+define('RECAPTCHA_VERIFY_URL', 'https://www.google.com/recaptcha/api/siteverify');
 
 // File upload settings
 define('MAX_FILE_SIZE', 2097152); // 2MB
