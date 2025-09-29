@@ -215,11 +215,11 @@ h6 {
 }
 
 .auth-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(248, 250, 252, 0.95);
     backdrop-filter: blur(20px);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-2xl);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(203, 213, 225, 0.3);
     overflow: hidden;
     width: 100%;
     max-width: 420px;
@@ -241,7 +241,7 @@ h6 {
 
 .auth-header {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--gray-50);
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     padding: var(--space-xl);
     text-align: center;
@@ -288,7 +288,7 @@ h6 {
 /* Dashboard cards */
 .stats-card {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--gray-50);
     border-radius: var(--radius-xl);
     padding: var(--space-xl);
     margin-bottom: var(--space-lg);
@@ -343,7 +343,7 @@ h6 {
 
 /* Course cards */
 .course-card {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
@@ -360,7 +360,7 @@ h6 {
 
 .course-header {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--gray-50);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     padding: var(--space-lg);
     position: relative;
@@ -447,7 +447,7 @@ h6 {
 
 /* Enhanced Tables */
 .table {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     overflow: hidden;
@@ -597,7 +597,7 @@ h6 {
 
 .btn-primary {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--gray-50);
     box-shadow: var(--shadow-sm);
 }
 
@@ -605,7 +605,7 @@ h6 {
     background: var(--gradient-primary-hover);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
-    color: white;
+    color: var(--gray-50);
 }
 
 .btn-primary:active {
@@ -620,18 +620,18 @@ h6 {
 
 .btn-outline-primary:hover {
     background: var(--primary-500);
-    color: white;
+    color: var(--gray-50);
     transform: translateY(-1px);
 }
 
 .btn-secondary {
     background-color: var(--gray-600);
-    color: white;
+    color: var(--gray-50);
 }
 
 .btn-secondary:hover {
     background-color: var(--gray-700);
-    color: white;
+    color: var(--gray-50);
 }
 
 .btn-outline-secondary {
@@ -641,13 +641,13 @@ h6 {
 
 .btn-outline-secondary:hover {
     background-color: var(--gray-600);
-    color: white;
+    color: var(--gray-50);
     border-color: var(--gray-600);
 }
 
 /* Enhanced Sidebar */
 .sidebar {
-    background: white;
+    background: var(--gray-50);
     min-height: calc(100vh - 76px);
     box-shadow: var(--shadow-lg);
     padding: var(--space-lg);
@@ -684,7 +684,7 @@ h6 {
 
 .sidebar-link.active {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--gray-50);
     text-decoration: none;
     box-shadow: var(--shadow-md);
 }
@@ -751,7 +751,7 @@ h6 {
 
 /* Enhanced Charts Container */
 .chart-container {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     padding: var(--space-xl);
     box-shadow: var(--shadow-md);
@@ -799,7 +799,7 @@ h6 {
 }
 
 .data-card {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     padding: var(--space-xl);
     box-shadow: var(--shadow-md);
@@ -952,7 +952,7 @@ h6 {
 
 /* Data Table Enhancements */
 .data-table-container {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     border: 1px solid var(--gray-200);
@@ -1018,7 +1018,7 @@ h6 {
 }
 
 .performance-card {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     text-align: center;
@@ -1045,7 +1045,7 @@ h6 {
 
 /* Enhanced Profile Page */
 .profile-card {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-xl);
     padding: var(--space-2xl);
@@ -1082,7 +1082,7 @@ h6 {
     align-items: center;
     justify-content: center;
     margin: 0 auto var(--space-lg);
-    color: white;
+    color: var(--gray-50);
     font-size: 3rem;
     font-weight: 600;
     box-shadow: var(--shadow-lg);
@@ -1308,7 +1308,7 @@ h6 {
 }
 
 .page-link:hover {
-    color: white;
+    color: var(--gray-50);
     background-color: var(--primary-500);
     border-color: var(--primary-500);
     transform: translateY(-1px);
@@ -1317,7 +1317,7 @@ h6 {
 .page-item.active .page-link {
     background: var(--gradient-primary);
     border-color: var(--primary-500);
-    color: white;
+    color: var(--gray-50);
     box-shadow: var(--shadow-sm);
 }
 
@@ -1485,7 +1485,7 @@ h6 {
 }
 
 .toast {
-    background: white;
+    background: var(--gray-50);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--gray-200);
