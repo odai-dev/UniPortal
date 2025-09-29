@@ -113,6 +113,12 @@ if ($_POST) {
 <div class="auth-container page-transition">
     <div class="auth-card col-md-6 col-lg-4">
         <div class="auth-header">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div></div>
+                <button class="btn btn-sm" onclick="toggleTheme()" id="theme-toggle" title="Toggle theme" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: var(--radius-md); padding: 0.4rem 0.8rem;">
+                    <i class="fas fa-sun" id="theme-icon"></i>
+                </button>
+            </div>
             <i class="fas fa-user-plus fa-3x mb-3"></i>
             <h3>Create Account</h3>
             <p class="mb-0">Join <?= SITE_NAME ?></p>
@@ -225,6 +231,56 @@ if ($_POST) {
 
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Theme Toggle JavaScript -->
+<script>
+// Theme Toggle Functionality
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', theme);
+    updateThemeToggle(theme);
+}
+
+function updateThemeToggle(theme) {
+    const icon = document.getElementById('theme-icon');
+    
+    if (!icon) return;
+    
+    if (theme === 'dark') {
+        icon.className = 'fas fa-moon';
+    } else {
+        icon.className = 'fas fa-sun';
+    }
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggle(newTheme);
+}
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+        const theme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeToggle(theme);
+    }
+});
+
+// Initialize theme
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+} else {
+    initTheme();
+}
+</script>
 
 </body>
 </html>

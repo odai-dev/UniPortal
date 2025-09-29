@@ -95,12 +95,12 @@ $page_title = isset($course) ? $course['course_name'] : 'Course Details';
                                         <i class="fas fa-check me-1"></i>Enrolled
                                     </span>
                                 <?php else: ?>
-                                    <button class="btn btn-light" onclick="enrollInCourse()">
+                                    <button class="btn btn-outline-primary" onclick="enrollInCourse()">
                                         <i class="fas fa-plus me-1"></i>Enroll
                                     </button>
                                 <?php endif; ?>
                             <?php else: ?>
-                                <a href="admin_courses.php?edit=<?= $course['id'] ?>" class="btn btn-light">
+                                <a href="admin_courses.php?edit=<?= $course['id'] ?>" class="btn btn-outline-secondary">
                                     <i class="fas fa-edit me-1"></i>Edit Course
                                 </a>
                             <?php endif; ?>

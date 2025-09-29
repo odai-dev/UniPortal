@@ -2,7 +2,7 @@
 
 <?php if (isLoggedIn()): ?>
 <!-- Footer for logged in users -->
-<footer class="bg-light mt-5 py-3">
+<footer class="bg-white mt-5 py-3" style="background-color: var(--gray-100) !important; border-top: 1px solid var(--gray-200);">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -46,6 +46,65 @@ $(document).ready(function() {
 setTimeout(function() {
     $('.alert').fadeOut('slow');
 }, 5000);
+
+// Theme Toggle Functionality
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', theme);
+    updateThemeToggle(theme);
+}
+
+function updateThemeToggle(theme) {
+    const icon = document.getElementById('theme-icon');
+    const text = document.getElementById('theme-text');
+    
+    if (!icon || !text) return;
+    
+    if (theme === 'dark') {
+        icon.className = 'fas fa-moon';
+        text.textContent = 'Dark';
+    } else {
+        icon.className = 'fas fa-sun';
+        text.textContent = 'Light';
+    }
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggle(newTheme);
+    
+    // Smooth transition
+    document.documentElement.style.transition = 'all 0.3s ease';
+    setTimeout(() => {
+        document.documentElement.style.transition = '';
+    }, 300);
+}
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+        const theme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeToggle(theme);
+    }
+});
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', initTheme);
+
+// For pages that don't have the theme toggle (like auth pages)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+} else {
+    initTheme();
+}
 </script>
 
 </div> <!-- Close page-transition -->

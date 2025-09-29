@@ -86,6 +86,12 @@ require_once 'db.php';
             </ul>
             
             <ul class="navbar-nav">
+                <li class="nav-item me-2">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle" title="Toggle theme">
+                        <i class="fas fa-sun" id="theme-icon"></i>
+                        <span id="theme-text">Light</span>
+                    </button>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user me-1"></i>
