@@ -1,4 +1,4 @@
-modules = ["php-8.4", "postgresql-17"]
+modules = ["php-8.4", "postgresql-17", "php-8.2"]
 [agent]
 expertMode = true
 
@@ -32,6 +32,10 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 37733
+externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"
