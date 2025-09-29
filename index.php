@@ -5,7 +5,7 @@ require_once 'db.php';
 if (isLoggedIn()) {
     header('Location: dashboard.php');
 } else {
-    header('Location: login.php');
+    header('Location: register.php');
 }
 exit();
 ?>

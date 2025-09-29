@@ -20,11 +20,12 @@ if ($_POST) {
     } else {
         $subject = sanitizeInput($_POST['subject'] ?? '');
         $message = sanitizeInput($_POST['message'] ?? '');
-        $captcha = sanitizeInput($_POST['captcha'] ?? '');
+        $robot_check = isset($_POST['robot_check']);
+        $robot_token = $_POST['robot_token'] ?? '';
     
-    // Validate CAPTCHA
-    if (empty($captcha) || !isset($_SESSION['captcha']) || strtoupper($captcha) !== $_SESSION['captcha']) {
-        $error_message = 'Invalid CAPTCHA. Please try again.';
+    // Validate robot verification
+    if (!$robot_check || !isset($_SESSION['robot_token']) || $robot_token !== $_SESSION['robot_token']) {
+        $error_message = 'Please verify that you are not a robot.';
     } elseif (empty($subject) || empty($message)) {
         $error_message = 'Please fill in all required fields.';
     } elseif (strlen($message) < 10) {

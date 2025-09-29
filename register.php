@@ -23,12 +23,13 @@ if ($_POST) {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-        $captcha = sanitizeInput($_POST['captcha'] ?? '');
+        $robot_check = isset($_POST['robot_check']);
+        $robot_token = $_POST['robot_token'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate CAPTCHA
-    if (empty($captcha) || !isset($_SESSION['captcha']) || strtoupper($captcha) !== $_SESSION['captcha']) {
-        $error_message = 'Invalid CAPTCHA. Please try again.';
+    // Validate robot verification
+    if (!$robot_check || !isset($_SESSION['robot_token']) || $robot_token !== $_SESSION['robot_token']) {
+        $error_message = 'Please verify that you are not a robot.';
     } elseif (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
         $error_message = 'Please fill in all fields.';
     } elseif (!validateEmail($email)) {
@@ -172,18 +173,20 @@ if ($_POST) {
                     </div>
                 </div>
 
-                <!-- CAPTCHA -->
+                <!-- Robot Verification -->
                 <div class="mb-3">
-                    <label for="captcha" class="form-label">Security Code</label>
-                    <div class="captcha-container">
-                        <img src="captcha.php" alt="CAPTCHA" class="captcha-image" id="captcha-image">
-                        <br>
-                        <small class="captcha-refresh" onclick="refreshCaptcha()">
-                            <i class="fas fa-sync-alt"></i> Click to refresh
-                        </small>
+                    <div class="robot-verification">
+                        <div class="form-check d-flex align-items-center p-3 border rounded">
+                            <input type="checkbox" class="form-check-input me-3" id="robot_check" name="robot_check" required>
+                            <label class="form-check-label flex-grow-1" for="robot_check">
+                                <i class="fas fa-robot me-2"></i>I'm not a robot
+                            </label>
+                            <div class="robot-icon">
+                                <i class="fas fa-shield-alt text-success"></i>
+                            </div>
+                        </div>
                     </div>
-                    <input type="text" class="form-control" id="captcha" name="captcha" 
-                           placeholder="Enter the code shown above" required>
+                    <input type="hidden" id="robot_token" name="robot_token" value="">
                 </div>
 
                 <div class="mb-3 form-check">
@@ -213,9 +216,17 @@ if ($_POST) {
 </div>
 
 <script>
-function refreshCaptcha() {
-    document.getElementById('captcha-image').src = 'captcha.php?' + Math.random();
-}
+// Load robot verification token
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('captcha.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('robot_token').value = data.token;
+        })
+        .catch(error => {
+            console.error('Error loading robot token:', error);
+        });
+});
 
 // Password strength indicator
 document.getElementById('password').addEventListener('input', function() {
