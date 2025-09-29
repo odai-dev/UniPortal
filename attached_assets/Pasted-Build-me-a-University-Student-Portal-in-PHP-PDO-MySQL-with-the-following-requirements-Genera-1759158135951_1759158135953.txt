@@ -1,0 +1,125 @@
+Build me a University Student Portal in PHP (PDO) & MySQL with the following requirements:
+
+General
+
+Use PHP 8+ and MySQL.
+
+All database queries must use PDO with prepared statements (no mysqli).
+
+Secure passwords with password_hash and verify with password_verify.
+
+Use Sessions & Cookies for authentication and “Remember Me.”
+
+Validate inputs using Regex (for email + password rules).
+
+Protect all pages (no access without login).
+
+Use Google reCAPTCHA (or a PHP image captcha library) for Register & Login.
+
+Organize files cleanly (db.php for PDO connection, header.php, footer.php, style.css).
+
+Authentication Pages
+
+Register (register.php)
+
+Fields: Full Name, Email (must be Gmail or Hotmail), Password (must include letters, numbers, and symbols).
+
+Username/email must be unique.
+
+“Remember Me” checkbox → sets a Cookie.
+
+On success → redirect to Login.
+
+Login (login.php)
+
+Fields: Email, Password, CAPTCHA.
+
+If correct → create Session and redirect to Dashboard.
+
+If “Remember Me” checked → store Cookie and auto-login next time.
+
+If wrong → show error message.
+
+Logout (logout.php)
+
+Destroy Session and Cookies.
+
+Main Pages
+
+Dashboard (dashboard.php)
+
+Shows student info and links to courses, grades, announcements.
+
+Role-based content → Admin vs Student.
+
+Profile (profile.php)
+
+Update name, password (re-hash on change).
+
+Courses (courses.php)
+
+List all courses from DB.
+
+Each course links to details page.
+
+Course Details (course.php?id=...)
+
+Show course info (name, instructor, syllabus).
+
+Admin Pages
+
+Manage Students (admin_students.php)
+
+Admin can view all students.
+
+Edit/Delete options using PDO queries.
+
+Manage Courses (admin_courses.php)
+
+Admin can Add/Edit/Delete courses.
+
+Extras
+
+Grades (grades.php) – Students can view their grades.
+
+Announcements (news.php) – List university announcements.
+
+Contact Us (contact.php) – Feedback form stored in DB.
+
+Database Design
+
+Create the following tables:
+
+users (id, name, email, password, role [‘student’, ‘admin’], created_at).
+
+courses (id, course_code, course_name, instructor, description).
+
+enrollments (id, user_id, course_id).
+
+grades (id, user_id, course_id, grade).
+
+announcements (id, title, content, created_at).
+
+messages (id, user_id, subject, message, created_at).
+
+Deployment
+
+Provide a database.sql file for creating all tables.
+
+Code must be compatible with free PHP hosting (InfinityFree, 000webhost).
+
+Use PDO everywhere with proper error handling and exceptions.Design/UI Requirements:
+
+Use Bootstrap 5 and Font Awesome for styling.
+
+Dashboard must look like a professional admin panel (navbar, sidebar, cards, tables, charts).
+
+Login/Register should have a centered form with a modern card design and background image.
+
+All pages must be responsive and mobile-friendly.
+
+Use DataTables.js for searchable/sortable tables.
+
+Use Chart.js for graphs/charts on the Dashboard.
+
+The overall design should look like a real university student portal, clean and modern, not plain HTML.
