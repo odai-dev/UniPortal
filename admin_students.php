@@ -1,9 +1,12 @@
 <?php
 $page_title = 'Manage Students';
-require_once 'header.php';
+require_once 'config.php';
+require_once 'db.php';
 
-// Require admin access
+// Require admin access (before any HTML output)
 requireAdmin();
+
+require_once 'header.php';
 
 $success_message = '';
 $error_message = '';

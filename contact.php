@@ -1,9 +1,12 @@
 <?php
 $page_title = 'Contact Us';
-require_once 'header.php';
+require_once 'config.php';
+require_once 'db.php';
 
-// Require login
+// Require login (before any HTML output)
 requireLogin();
+
+require_once 'header.php';
 
 $success_message = '';
 $error_message = '';

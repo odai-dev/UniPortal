@@ -1,9 +1,12 @@
 <?php
 $page_title = 'My Grades';
-require_once 'header.php';
+require_once 'config.php';
+require_once 'db.php';
 
-// Require login
+// Require login (before any HTML output)
 requireLogin();
+
+require_once 'header.php';
 
 // Students can only view their own grades, admins can view all
 $user_id = isAdmin() ? ($_GET['student_id'] ?? null) : $_SESSION['user_id'];
