@@ -2,6 +2,7 @@
 $page_title = 'Login';
 require_once 'config.php';
 require_once 'db.php';
+require_once 'recaptcha_verify.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
@@ -21,13 +22,12 @@ if ($_POST) {
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-        $captcha_input = sanitizeInput($_POST['captcha_code'] ?? '');
+        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate CAPTCHA verification
-    if (empty($captcha_input) || !isset($_SESSION['captcha_code']) || 
-        strtoupper($captcha_input) !== $_SESSION['captcha_code']) {
-        $error_message = 'Please enter the correct verification code from the image.';
+    // Validate reCAPTCHA verification
+    if (!verifyRecaptcha($recaptcha_response)) {
+        $error_message = 'Please complete the reCAPTCHA verification.';
     } elseif (empty($email) || empty($password)) {
         $error_message = 'Please fill in all fields.';
     } elseif (!validateEmail($email)) {
@@ -40,9 +40,6 @@ if ($_POST) {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // Clear CAPTCHA session after successful login
-                unset($_SESSION['captcha_code']);
-                
                 // Invalidate old CSRF token and regenerate session
                 invalidateCSRFToken();
                 regenerateSession();
@@ -118,6 +115,9 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
+    
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -176,23 +176,11 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     </div>
                 </div>
 
-                <!-- Image CAPTCHA Verification -->
+                <!-- Google reCAPTCHA Verification -->
                 <div class="mb-3">
-                    <label for="captcha_code" class="form-label">Security Verification</label>
-                    <div class="d-flex align-items-center">
-                        <img src="captcha.php" alt="Security Code" id="captcha_image" class="border rounded me-3" style="cursor: pointer;" onclick="this.src='captcha.php?'+Math.random();">
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-3" onclick="document.getElementById('captcha_image').src='captcha.php?'+Math.random();">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <div class="input-group flex-grow-1">
-                            <span class="input-group-text">
-                                <i class="fas fa-shield-alt"></i>
-                            </span>
-                            <input type="text" class="form-control" id="captcha_code" name="captcha_code" 
-                                   placeholder="Enter code from image" required maxlength="5">
-                        </div>
-                    </div>
-                    <small class="form-text text-muted">Enter the 5-character code shown in the image</small>
+                    <label class="form-label">Security Verification</label>
+                    <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                    <small class="form-text text-muted">Please verify that you are not a robot</small>
                 </div>
 
                 <div class="mb-3 form-check">
