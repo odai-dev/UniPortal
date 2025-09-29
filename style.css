@@ -1746,6 +1746,31 @@ h6 {
     margin: var(--space-sm) 0;
 }
 
+/* Text Color Utilities */
+.text-muted {
+    color: var(--gray-500) !important;
+}
+
+.text-primary {
+    color: var(--primary-600) !important;
+}
+
+.text-success {
+    color: var(--success) !important;
+}
+
+.text-warning {
+    color: var(--warning) !important;
+}
+
+.text-danger, .text-error {
+    color: var(--error) !important;
+}
+
+.text-info {
+    color: var(--info) !important;
+}
+
 /* Dark Theme Support */
 [data-theme="dark"] {
     /* Dark Color Palette */
@@ -1924,6 +1949,113 @@ html {
 [data-theme="dark"] .table {
     background-color: var(--gray-100);
     border-color: var(--gray-200);
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+    border-color: var(--gray-300);
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--gray-200);
+}
+
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--gray-100);
+    border-color: var(--gray-200);
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: var(--gray-800);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+    background-color: var(--gray-200);
+    color: var(--primary-600);
+}
+
+/* Dark mode profile card */
+[data-theme="dark"] .profile-card {
+    background: var(--gray-100);
+    border-color: var(--gray-300);
+    color: var(--gray-800);
+}
+
+[data-theme="dark"] .profile-header {
+    border-bottom-color: var(--gray-200);
+}
+
+[data-theme="dark"] .profile-avatar {
+    border-color: var(--gray-100);
+}
+
+/* Dark mode card components */
+[data-theme="dark"] .card {
+    background-color: var(--gray-100);
+    border-color: var(--gray-300);
+    color: var(--gray-800);
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--gray-200);
+    border-bottom-color: var(--gray-300);
+    color: var(--gray-900);
+}
+
+[data-theme="dark"] .card-body {
+    color: var(--gray-800);
+}
+
+/* Dark mode modal */
+[data-theme="dark"] .modal-content {
+    background-color: var(--gray-100);
+    border-color: var(--gray-300);
+    color: var(--gray-800);
+}
+
+[data-theme="dark"] .modal-header {
+    background-color: var(--gray-200);
+    border-bottom-color: var(--gray-300);
+    color: var(--gray-900);
+}
+
+[data-theme="dark"] .modal-body {
+    color: var(--gray-800);
+}
+
+[data-theme="dark"] .modal-footer {
+    background-color: var(--gray-200);
+    border-top-color: var(--gray-300);
+}
+
+/* Dark mode alerts */
+[data-theme="dark"] .alert {
+    color: var(--gray-900);
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: var(--error);
+    color: var(--error);
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(234, 179, 8, 0.1);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--info);
+    color: var(--info);
 }
 
 [data-theme="dark"] .table thead th {
