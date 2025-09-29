@@ -63,6 +63,19 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+-- Create remember_tokens table for secure remember me functionality
+CREATE TABLE IF NOT EXISTS remember_tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    token_hash VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_token_hash ON remember_tokens(token_hash);
+CREATE INDEX IF NOT EXISTS idx_user_id_tokens ON remember_tokens(user_id);
+
 -- Insert sample admin user
 INSERT INTO users (name, email, password, role) VALUES 
 ('Admin User', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin')
