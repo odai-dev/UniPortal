@@ -3,7 +3,10 @@
 
 // Site settings
 define('SITE_NAME', 'University Student Portal');
-define('SITE_URL', 'http://localhost:5000');
+// Use Replit domain if available, otherwise fall back to localhost
+$domain = $_ENV['REPLIT_DEV_DOMAIN'] ?? 'localhost:5000';
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'https'; // Force HTTPS for Replit
+define('SITE_URL', $protocol . '://' . $domain);
 
 // Session settings - Fixed for security
 define('SESSION_TIMEOUT', 3600); // 1 hour
