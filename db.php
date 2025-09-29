@@ -1,5 +1,6 @@
 <?php
 // Database connection using PDO
+require_once 'config.php';
 session_start();
 
 // Database configuration - supports both MySQL and PostgreSQL
