@@ -20,12 +20,12 @@ if ($_POST) {
     } else {
         $subject = sanitizeInput($_POST['subject'] ?? '');
         $message = sanitizeInput($_POST['message'] ?? '');
-        $robot_check = isset($_POST['robot_check']);
-        $robot_token = $_POST['robot_token'] ?? '';
+        $captcha_input = sanitizeInput($_POST['captcha_code'] ?? '');
     
-    // Validate robot verification
-    if (!$robot_check || !isset($_SESSION['robot_token']) || $robot_token !== $_SESSION['robot_token']) {
-        $error_message = 'Please verify that you are not a robot.';
+    // Validate CAPTCHA verification
+    if (empty($captcha_input) || !isset($_SESSION['captcha_code']) || 
+        strtoupper($captcha_input) !== $_SESSION['captcha_code']) {
+        $error_message = 'Please enter the correct verification code from the image.';
     } elseif (empty($subject) || empty($message)) {
         $error_message = 'Please fill in all required fields.';
     } elseif (strlen($message) < 10) {
@@ -35,6 +35,9 @@ if ($_POST) {
             $stmt = $pdo->prepare("INSERT INTO messages (user_id, subject, message) VALUES (?, ?, ?)");
             $stmt->execute([$_SESSION['user_id'], $subject, $message]);
             $success_message = 'Your message has been sent successfully! We will get back to you soon.';
+            
+            // Clear CAPTCHA session after successful submission
+            unset($_SESSION['captcha_code']);
             
             // Clear form
             $_POST = [];
@@ -109,18 +112,23 @@ if (isAdmin()) {
                         <small class="form-text text-muted">Minimum 10 characters required</small>
                     </div>
 
-                    <!-- CAPTCHA -->
+                    <!-- Image CAPTCHA Verification -->
                     <div class="mb-3">
-                        <label for="captcha" class="form-label">Security Code <span class="text-danger">*</span></label>
-                        <div class="captcha-container">
-                            <img src="captcha.php" alt="CAPTCHA" class="captcha-image" id="captcha-image">
-                            <br>
-                            <small class="captcha-refresh" onclick="refreshCaptcha()">
-                                <i class="fas fa-sync-alt"></i> Click to refresh
-                            </small>
+                        <label for="captcha_code" class="form-label">Security Verification</label>
+                        <div class="d-flex align-items-center">
+                            <img src="captcha.php" alt="Security Code" id="captcha_image" class="border rounded me-3" style="cursor: pointer;" onclick="this.src='captcha.php?'+Math.random();">
+                            <button type="button" class="btn btn-outline-secondary btn-sm me-3" onclick="document.getElementById('captcha_image').src='captcha.php?'+Math.random();">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <div class="input-group flex-grow-1">
+                                <span class="input-group-text">
+                                    <i class="fas fa-shield-alt"></i>
+                                </span>
+                                <input type="text" class="form-control" id="captcha_code" name="captcha_code" 
+                                       placeholder="Enter code from image" required maxlength="5">
+                            </div>
                         </div>
-                        <input type="text" class="form-control" id="captcha" name="captcha" 
-                               placeholder="Enter the code shown above" required>
+                        <small class="form-text text-muted">Enter the 5-character code shown in the image</small>
                     </div>
 
                     <div class="d-grid">
@@ -321,24 +329,27 @@ function viewMessage(message) {
 </script>
 <?php endif; ?>
 
-<script>
-function refreshCaptcha() {
-    document.getElementById('captcha-image').src = 'captcha.php?' + Math.random();
-}
+<script src="form-enhancements.js"></script>
 
-// Character counter
-document.getElementById('message').addEventListener('input', function() {
-    const length = this.value.length;
-    const minLength = 10;
-    
-    if (length > 0 && length < minLength) {
-        this.classList.add('is-invalid');
-        this.classList.remove('is-valid');
-    } else if (length >= minLength) {
-        this.classList.add('is-valid');
-        this.classList.remove('is-invalid');
-    } else {
-        this.classList.remove('is-valid', 'is-invalid');
+<script>
+// Character counter for contact form message
+document.addEventListener('DOMContentLoaded', function() {
+    const messageField = document.getElementById('message');
+    if (messageField) {
+        messageField.addEventListener('input', function() {
+            const length = this.value.length;
+            const minLength = 10;
+            
+            if (length > 0 && length < minLength) {
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+            } else if (length >= minLength) {
+                this.classList.add('is-valid');
+                this.classList.remove('is-invalid');
+            } else {
+                this.classList.remove('is-valid', 'is-invalid');
+            }
+        });
     }
 });
 </script>

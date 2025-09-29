@@ -21,13 +21,13 @@ if ($_POST) {
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-        $robot_check = isset($_POST['robot_check']);
-        $robot_token = $_POST['robot_token'] ?? '';
+        $captcha_input = sanitizeInput($_POST['captcha_code'] ?? '');
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate robot verification
-    if (!$robot_check || !isset($_SESSION['robot_token']) || $robot_token !== $_SESSION['robot_token']) {
-        $error_message = 'Please verify that you are not a robot.';
+    // Validate CAPTCHA verification
+    if (empty($captcha_input) || !isset($_SESSION['captcha_code']) || 
+        strtoupper($captcha_input) !== $_SESSION['captcha_code']) {
+        $error_message = 'Please enter the correct verification code from the image.';
     } elseif (empty($email) || empty($password)) {
         $error_message = 'Please fill in all fields.';
     } elseif (!validateEmail($email)) {
@@ -40,6 +40,9 @@ if ($_POST) {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
+                // Clear CAPTCHA session after successful login
+                unset($_SESSION['captcha_code']);
+                
                 // Invalidate old CSRF token and regenerate session
                 invalidateCSRFToken();
                 regenerateSession();
@@ -167,20 +170,23 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     </div>
                 </div>
 
-                <!-- Robot Verification -->
+                <!-- Image CAPTCHA Verification -->
                 <div class="mb-3">
-                    <div class="robot-verification">
-                        <div class="form-check d-flex align-items-center p-3 border rounded">
-                            <input type="checkbox" class="form-check-input me-3" id="robot_check" name="robot_check" required>
-                            <label class="form-check-label flex-grow-1" for="robot_check">
-                                <i class="fas fa-robot me-2"></i>I'm not a robot
-                            </label>
-                            <div class="robot-icon">
-                                <i class="fas fa-shield-alt text-success"></i>
-                            </div>
+                    <label for="captcha_code" class="form-label">Security Verification</label>
+                    <div class="d-flex align-items-center">
+                        <img src="captcha.php" alt="Security Code" id="captcha_image" class="border rounded me-3" style="cursor: pointer;" onclick="this.src='captcha.php?'+Math.random();">
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-3" onclick="document.getElementById('captcha_image').src='captcha.php?'+Math.random();">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <div class="input-group flex-grow-1">
+                            <span class="input-group-text">
+                                <i class="fas fa-shield-alt"></i>
+                            </span>
+                            <input type="text" class="form-control" id="captcha_code" name="captcha_code" 
+                                   placeholder="Enter code from image" required maxlength="5">
                         </div>
                     </div>
-                    <input type="hidden" id="robot_token" name="robot_token" value="">
+                    <small class="form-text text-muted">Enter the 5-character code shown in the image</small>
                 </div>
 
                 <div class="mb-3 form-check">
@@ -209,19 +215,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     </div>
 </div>
 
-<script>
-// Load robot verification token
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('captcha.php')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('robot_token').value = data.token;
-        })
-        .catch(error => {
-            console.error('Error loading robot token:', error);
-        });
-});
-</script>
+<script src="form-enhancements.js"></script>
 
 <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
