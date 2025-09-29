@@ -4,7 +4,7 @@
 
 This is a University Student Portal built with PHP 8+, PDO, and PostgreSQL. The application provides a secure authentication system with user registration, login functionality, and a dashboard for students. The system emphasizes security best practices including password hashing, prepared statements, input validation, and CAPTCHA protection.
 
-**Current Status**: Fully configured and running in Replit environment with PostgreSQL database integration.
+**Current Status**: ✅ Fully configured and running in Replit environment with PostgreSQL database integration. Import completed on September 29, 2025.
 
 ## User Preferences
 
@@ -45,10 +45,38 @@ Preferred communication style: Simple, everyday language.
 - **User Data**: Stores full name, email, hashed passwords
 - **Session Storage**: PHP sessions with optional cookie persistence
 
+## Recent Changes
+
+**September 29, 2025 - Initial Replit Setup**
+- Created PostgreSQL database and initialized schema
+- Added `remember_tokens` table for secure session management
+- Configured PHP development server workflow on port 5000
+- Set up deployment configuration for autoscale deployment
+- Verified all core functionality (registration, login, CAPTCHA)
+
 ## External Dependencies
 
-- **CAPTCHA Service**: Google reCAPTCHA integration or PHP image captcha library
-- **Database**: PostgreSQL database server
-- **Web Server**: Apache/Nginx with PHP 8+ support
+- **CAPTCHA Service**: PHP image captcha library (built-in)
+- **Database**: PostgreSQL database server (Replit-managed)
+- **Web Server**: PHP 8.4 built-in development server
 - **Email Validation**: Gmail and Hotmail domain restrictions
 - **Security Libraries**: Built-in PHP password hashing functions
+
+## Replit Environment Setup
+
+### Workflow Configuration
+- **PHP Server**: Runs on port 5000 with host `0.0.0.0`
+- **Command**: `php -S 0.0.0.0:5000 -t .`
+
+### Database Configuration
+- **Type**: PostgreSQL (Neon-backed)
+- **Connection**: Uses environment variables (`PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`)
+- **Tables**: users, courses, enrollments, grades, announcements, messages, remember_tokens
+
+### Deployment Configuration
+- **Type**: Autoscale (stateless web application)
+- **Run Command**: `php -S 0.0.0.0:5000`
+
+### Default Credentials
+- **Admin Email**: admin@gmail.com
+- **Admin Password**: admin123!
