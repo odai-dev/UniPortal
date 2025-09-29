@@ -1,5 +1,6 @@
 <?php
 $page_title = 'Login';
+require_once 'config.php';
 require_once 'db.php';
 
 // Redirect if already logged in

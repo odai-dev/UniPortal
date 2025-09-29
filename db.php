@@ -26,8 +26,14 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
     
-    // Set character set
-    $pdo->exec("SET NAMES utf8");
+    // Set character set (database-specific)
+    if (isset($_ENV['PGHOST']) || isset($_ENV['PGDATABASE'])) {
+        // PostgreSQL - charset is set in DSN, no additional command needed
+        // PostgreSQL uses UTF-8 by default
+    } else {
+        // MySQL
+        $pdo->exec("SET NAMES utf8");
+    }
     
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
