@@ -231,8 +231,10 @@ class CustomCaptcha {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize immediately if DOM is ready, otherwise wait for DOMContentLoaded
+function initCustomCaptcha() {
     const captchaContainer = document.getElementById('custom-captcha-container');
+    
     if (captchaContainer) {
         window.customCaptcha = new CustomCaptcha('custom-captcha-container');
         
@@ -247,4 +249,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-});
+}
+
+// Initialize based on document state
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomCaptcha);
+} else {
+    // DOM already loaded, initialize immediately
+    initCustomCaptcha();
+}
