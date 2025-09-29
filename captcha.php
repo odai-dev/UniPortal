@@ -1,5 +1,8 @@
 <?php
 // Simple PHP CAPTCHA generator
+// Turn off error display for this file to prevent image corruption
+error_reporting(0);
+ini_set('display_errors', 0);
 session_start();
 
 // Generate random CAPTCHA string
@@ -37,8 +40,8 @@ for ($i = 0; $i < 5; $i++) {
 
 // Add text
 $font_size = 5;
-$text_x = ($image_width - strlen($captcha_string) * imagefontwidth($font_size)) / 2;
-$text_y = ($image_height - imagefontheight($font_size)) / 2;
+$text_x = (int)(($image_width - strlen($captcha_string) * imagefontwidth($font_size)) / 2);
+$text_y = (int)(($image_height - imagefontheight($font_size)) / 2);
 
 imagestring($image, $font_size, $text_x, $text_y, $captcha_string, $text_color);
 
