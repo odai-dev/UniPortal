@@ -48,5 +48,6 @@ setTimeout(function() {
 }, 5000);
 </script>
 
+</div> <!-- Close page-transition -->
 </body>
 </html>

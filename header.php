@@ -25,10 +25,11 @@ require_once 'db.php';
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
+<div class="page-transition">
 
 <?php if (isLoggedIn()): ?>
 <!-- Navigation for logged in users -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="dashboard.php">
             <i class="fas fa-graduation-cap me-2"></i>

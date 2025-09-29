@@ -121,7 +121,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
 </head>
 <body>
 
-<div class="auth-container">
+<div class="auth-container page-transition">
     <div class="auth-card col-md-6 col-lg-4">
         <div class="auth-header">
             <i class="fas fa-graduation-cap fa-3x mb-3"></i>
@@ -154,7 +154,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                         </span>
                         <input type="email" class="form-control" id="email" name="email" 
                                value="<?= isset($_POST['email']) ? sanitizeInput($_POST['email']) : '' ?>"
-                               placeholder="Enter your Gmail or Hotmail address" required>
+                               placeholder="Enter your Gmail or Hotmail address" required autocomplete="email">
                     </div>
                     <small class="form-text text-muted">Only Gmail and Hotmail addresses are accepted</small>
                 </div>
@@ -166,7 +166,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                             <i class="fas fa-lock"></i>
                         </span>
                         <input type="password" class="form-control" id="password" name="password" 
-                               placeholder="Enter your password" required>
+                               placeholder="Enter your password" required autocomplete="current-password">
                     </div>
                 </div>
 

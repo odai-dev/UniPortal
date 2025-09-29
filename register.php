@@ -110,7 +110,7 @@ if ($_POST) {
 </head>
 <body>
 
-<div class="auth-container">
+<div class="auth-container page-transition">
     <div class="auth-card col-md-6 col-lg-4">
         <div class="auth-header">
             <i class="fas fa-user-plus fa-3x mb-3"></i>
@@ -136,7 +136,7 @@ if ($_POST) {
                         </span>
                         <input type="text" class="form-control" id="name" name="name" 
                                value="<?= isset($_POST['name']) ? sanitizeInput($_POST['name']) : '' ?>"
-                               placeholder="Enter your full name" required>
+                               placeholder="Enter your full name" required autocomplete="name">
                     </div>
                 </div>
 
@@ -148,7 +148,7 @@ if ($_POST) {
                         </span>
                         <input type="email" class="form-control" id="email" name="email" 
                                value="<?= isset($_POST['email']) ? sanitizeInput($_POST['email']) : '' ?>"
-                               placeholder="Enter your Gmail or Hotmail address" required>
+                               placeholder="Enter your Gmail or Hotmail address" required autocomplete="email">
                     </div>
                     <small class="form-text text-muted">Only Gmail and Hotmail addresses are accepted</small>
                 </div>
@@ -160,7 +160,7 @@ if ($_POST) {
                             <i class="fas fa-lock"></i>
                         </span>
                         <input type="password" class="form-control" id="password" name="password" 
-                               placeholder="Create a strong password" required>
+                               placeholder="Create a strong password" required autocomplete="new-password">
                     </div>
                     <small class="form-text text-muted">Must be 8+ characters with letters, numbers, and symbols</small>
                 </div>
@@ -172,7 +172,7 @@ if ($_POST) {
                             <i class="fas fa-lock"></i>
                         </span>
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                               placeholder="Confirm your password" required>
+                               placeholder="Confirm your password" required autocomplete="new-password">
                     </div>
                 </div>
 

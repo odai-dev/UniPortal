@@ -70,7 +70,7 @@ try {
 </div>
 
 <!-- Statistics Cards -->
-<div class="row mb-4">
+<div class="row mb-4 stagger-animation">
     <?php if (isAdmin()): ?>
         <div class="col-md-3 mb-3">
             <div class="stats-card">
