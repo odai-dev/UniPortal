@@ -186,19 +186,48 @@ try {
     <?php endif; ?>
 </div>
 
-<!-- Charts Section -->
+<!-- System Overview Section -->
 <?php if (isAdmin()): ?>
 <div class="row mb-4">
-    <div class="col-md-6">
-        <div class="chart-container">
-            <h5><i class="fas fa-chart-bar me-2"></i>Student Enrollment Overview</h5>
-            <canvas id="enrollmentChart" height="200"></canvas>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="chart-container">
-            <h5><i class="fas fa-chart-pie me-2"></i>Course Distribution</h5>
-            <canvas id="courseChart" height="200"></canvas>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i>System Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="p-3">
+                            <i class="fas fa-user-graduate fa-3x text-primary mb-2"></i>
+                            <h4><?= $total_students ?></h4>
+                            <p class="text-muted">Total Students</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3">
+                            <i class="fas fa-book fa-3x text-success mb-2"></i>
+                            <h4><?= $total_courses ?></h4>
+                            <p class="text-muted">Available Courses</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3">
+                            <i class="fas fa-bullhorn fa-3x text-warning mb-2"></i>
+                            <h4><?= $total_announcements ?></h4>
+                            <p class="text-muted">Active Announcements</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3">
+                            <i class="fas fa-calendar-check fa-3x text-info mb-2"></i>
+                            <h4><?= date('Y') ?></h4>
+                            <p class="text-muted">Current Year</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -323,87 +352,5 @@ try {
 </div>
 <?php endif; ?>
 
-<?php if (isAdmin()): ?>
-<script>
-// Charts for admin dashboard - with protection against multiple initializations
-(function() {
-    if (window.chartsInitialized) {
-        return;
-    }
-    window.chartsInitialized = true;
-
-    function initCharts() {
-        const enrollmentCanvas = document.getElementById('enrollmentChart');
-        const courseCanvas = document.getElementById('courseChart');
-        
-        if (!enrollmentCanvas || !courseCanvas) {
-            return;
-        }
-
-        // Destroy existing charts if they exist
-        if (window.enrollmentChartInstance) {
-            window.enrollmentChartInstance.destroy();
-        }
-        if (window.courseChartInstance) {
-            window.courseChartInstance.destroy();
-        }
-
-        // Enrollment Chart
-        const enrollmentCtx = enrollmentCanvas.getContext('2d');
-        window.enrollmentChartInstance = new Chart(enrollmentCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'New Students',
-                    data: [12, 19, 8, 15, 25, 18],
-                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                    borderColor: 'rgba(102, 126, 234, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Course Distribution Chart
-        const courseCtx = courseCanvas.getContext('2d');
-        window.courseChartInstance = new Chart(courseCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Computer Science', 'Mathematics', 'English', 'Physics', 'History'],
-                datasets: [{
-                    data: [30, 25, 15, 20, 10],
-                    backgroundColor: [
-                        'rgba(102, 126, 234, 0.8)',
-                        'rgba(118, 75, 162, 0.8)',
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCharts);
-    } else {
-        initCharts();
-    }
-})();
-</script>
-<?php endif; ?>
 
 <?php require_once 'footer.php'; ?>
