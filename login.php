@@ -65,7 +65,7 @@ if ($_POST) {
             }
         } catch (PDOException $e) {
             error_log('Login PDOException: ' . $e->getMessage());
-            $error_message = 'Database error occurred. Please try again. Error: ' . $e->getMessage();
+            $error_message = 'Database error occurred. Please try again.';
         }
     }
     }

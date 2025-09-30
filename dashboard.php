@@ -325,56 +325,84 @@ try {
 
 <?php if (isAdmin()): ?>
 <script>
-// Charts for admin dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Enrollment Chart
-    const enrollmentCtx = document.getElementById('enrollmentChart').getContext('2d');
-    new Chart(enrollmentCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'New Students',
-                data: [12, 19, 8, 15, 25, 18],
-                backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                borderColor: 'rgba(102, 126, 234, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
+// Charts for admin dashboard - with protection against multiple initializations
+(function() {
+    if (window.chartsInitialized) {
+        return;
+    }
+    window.chartsInitialized = true;
+
+    function initCharts() {
+        const enrollmentCanvas = document.getElementById('enrollmentChart');
+        const courseCanvas = document.getElementById('courseChart');
+        
+        if (!enrollmentCanvas || !courseCanvas) {
+            return;
+        }
+
+        // Destroy existing charts if they exist
+        if (window.enrollmentChartInstance) {
+            window.enrollmentChartInstance.destroy();
+        }
+        if (window.courseChartInstance) {
+            window.courseChartInstance.destroy();
+        }
+
+        // Enrollment Chart
+        const enrollmentCtx = enrollmentCanvas.getContext('2d');
+        window.enrollmentChartInstance = new Chart(enrollmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'New Students',
+                    data: [12, 19, 8, 15, 25, 18],
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Course Distribution Chart
-    const courseCtx = document.getElementById('courseChart').getContext('2d');
-    new Chart(courseCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Computer Science', 'Mathematics', 'English', 'Physics', 'History'],
-            datasets: [{
-                data: [30, 25, 15, 20, 10],
-                backgroundColor: [
-                    'rgba(102, 126, 234, 0.8)',
-                    'rgba(118, 75, 162, 0.8)',
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(255, 206, 86, 0.8)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-});
+        // Course Distribution Chart
+        const courseCtx = courseCanvas.getContext('2d');
+        window.courseChartInstance = new Chart(courseCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Computer Science', 'Mathematics', 'English', 'Physics', 'History'],
+                datasets: [{
+                    data: [30, 25, 15, 20, 10],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCharts);
+    } else {
+        initCharts();
+    }
+})();
 </script>
 <?php endif; ?>
 
