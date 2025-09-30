@@ -1,6 +1,3 @@
-// Shared form enhancement functionality for University Student Portal
-
-// CAPTCHA refresh functionality - automatically refresh on page load
 document.addEventListener('DOMContentLoaded', function() {
     const captchaImage = document.getElementById('captcha_image');
     if (captchaImage) {
@@ -8,12 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Keyboard arrow navigation between form inputs
 document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         e.preventDefault();
         
-        // Get all focusable form elements in order
         const formElements = Array.from(document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="checkbox"], select, textarea, button[type="submit"]'));
         const currentIndex = formElements.indexOf(document.activeElement);
         
@@ -21,7 +16,7 @@ document.addEventListener('keydown', function(e) {
             let nextIndex;
             if (e.key === 'ArrowDown') {
                 nextIndex = (currentIndex + 1) % formElements.length;
-            } else { // ArrowUp
+            } else {
                 nextIndex = currentIndex === 0 ? formElements.length - 1 : currentIndex - 1;
             }
             formElements[nextIndex].focus();
@@ -29,7 +24,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Password strength indicator (for forms with password fields)
 document.addEventListener('DOMContentLoaded', function() {
     const passwordField = document.getElementById('password');
     if (passwordField) {
@@ -57,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Confirm password validation (for forms with confirm password fields)
 document.addEventListener('DOMContentLoaded', function() {
     const confirmPasswordField = document.getElementById('confirm_password');
     if (confirmPasswordField) {

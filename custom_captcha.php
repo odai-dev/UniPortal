@@ -11,8 +11,6 @@ if ($action === 'generate') {
 }
 
 function getClientIP() {
-    // Security: Primarily use REMOTE_ADDR as it's most reliable. Only fallback to X-Forwarded-For
-    // if REMOTE_ADDR is a private/local IP, to prevent IP spoofing attacks.
     $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {

@@ -1,7 +1,5 @@
--- University Student Portal Database Schema
--- Compatible with PostgreSQL (using same SQL structure as MySQL)
+-- PostgreSQL schema
 
--- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -11,7 +9,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create courses table
 CREATE TABLE IF NOT EXISTS courses (
     id SERIAL PRIMARY KEY,
     course_code VARCHAR(20) NOT NULL UNIQUE,
@@ -21,7 +18,6 @@ CREATE TABLE IF NOT EXISTS courses (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create enrollments table
 CREATE TABLE IF NOT EXISTS enrollments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -32,7 +28,6 @@ CREATE TABLE IF NOT EXISTS enrollments (
     UNIQUE(user_id, course_id)
 );
 
--- Create grades table
 CREATE TABLE IF NOT EXISTS grades (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -45,7 +40,6 @@ CREATE TABLE IF NOT EXISTS grades (
     UNIQUE(user_id, course_id)
 );
 
--- Create announcements table
 CREATE TABLE IF NOT EXISTS announcements (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -53,7 +47,6 @@ CREATE TABLE IF NOT EXISTS announcements (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create messages table (for contact form)
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
     user_id INTEGER,
@@ -63,7 +56,6 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Create remember_tokens table for secure remember me functionality
 CREATE TABLE IF NOT EXISTS remember_tokens (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -76,12 +68,10 @@ CREATE TABLE IF NOT EXISTS remember_tokens (
 CREATE INDEX IF NOT EXISTS idx_token_hash ON remember_tokens(token_hash);
 CREATE INDEX IF NOT EXISTS idx_user_id_tokens ON remember_tokens(user_id);
 
--- Insert sample admin user
 INSERT INTO users (name, email, password, role) VALUES 
 ('Admin User', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin')
 ON CONFLICT (email) DO NOTHING;
 
--- Insert sample courses
 INSERT INTO courses (course_code, course_name, instructor, description) VALUES 
 ('CS101', 'Introduction to Computer Science', 'Dr. Ahmed Al-Qadhi', 'Fundamental concepts of programming and computer science'),
 ('MATH201', 'Calculus I', 'Dr. Mohammed Al-Jabali', 'Differential and integral calculus with applications'),
@@ -90,7 +80,6 @@ INSERT INTO courses (course_code, course_name, instructor, description) VALUES
 ('HIST150', 'History of Yemen', 'Prof. Fatima Ba-Wazir', 'Overview of Yemen''s ancient and modern history')
 ON CONFLICT (course_code) DO NOTHING;
 
--- Insert sample announcements
 INSERT INTO announcements (title, content) VALUES 
 ('Welcome to the New Semester!', 'We wish you a successful semester. Please check your course schedules and contact your academic advisor for any questions.'),
 ('Library Hours Extended', 'The university library will remain open 24/7 during exam periods. Please bring your student ID for late-hour access.'),

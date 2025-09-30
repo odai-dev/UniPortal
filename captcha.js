@@ -231,7 +231,6 @@ class CustomCaptcha {
     }
 }
 
-// Initialize immediately if DOM is ready, otherwise wait for DOMContentLoaded
 function initCustomCaptcha() {
     const captchaContainer = document.getElementById('custom-captcha-container');
     
@@ -251,10 +250,8 @@ function initCustomCaptcha() {
     }
 }
 
-// Initialize based on document state
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCustomCaptcha);
 } else {
-    // DOM already loaded, initialize immediately
     initCustomCaptcha();
 }

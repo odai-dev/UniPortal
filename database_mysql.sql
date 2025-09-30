@@ -1,7 +1,5 @@
--- University Student Portal Database Schema for MySQL
--- Compatible with MySQL 5.7+ and MariaDB
+-- MySQL schema
 
--- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -11,7 +9,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create courses table
 CREATE TABLE IF NOT EXISTS courses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     course_code VARCHAR(20) NOT NULL UNIQUE,
@@ -21,7 +18,6 @@ CREATE TABLE IF NOT EXISTS courses (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create enrollments table
 CREATE TABLE IF NOT EXISTS enrollments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -32,7 +28,6 @@ CREATE TABLE IF NOT EXISTS enrollments (
     UNIQUE KEY unique_enrollment (user_id, course_id)
 );
 
--- Create grades table
 CREATE TABLE IF NOT EXISTS grades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -45,7 +40,6 @@ CREATE TABLE IF NOT EXISTS grades (
     UNIQUE KEY unique_grade (user_id, course_id)
 );
 
--- Create announcements table
 CREATE TABLE IF NOT EXISTS announcements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -53,7 +47,6 @@ CREATE TABLE IF NOT EXISTS announcements (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create messages table (for contact form)
 CREATE TABLE IF NOT EXISTS messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
@@ -63,7 +56,6 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Create remember_tokens table for secure remember me functionality
 CREATE TABLE IF NOT EXISTS remember_tokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -75,7 +67,6 @@ CREATE TABLE IF NOT EXISTS remember_tokens (
     INDEX idx_user_id (user_id)
 );
 
--- Create course_materials table for file uploads
 CREATE TABLE IF NOT EXISTS course_materials (
     id INT AUTO_INCREMENT PRIMARY KEY,
     course_id INT NOT NULL,
@@ -93,11 +84,9 @@ CREATE TABLE IF NOT EXISTS course_materials (
     INDEX idx_uploaded_by (uploaded_by)
 );
 
--- Insert sample admin user (password: password)
 INSERT IGNORE INTO users (name, email, password, role) VALUES 
 ('Admin User', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
 
--- Insert sample courses
 INSERT IGNORE INTO courses (course_code, course_name, instructor, description) VALUES 
 ('CS101', 'Introduction to Computer Science', 'Dr. Smith', 'Basic concepts of programming and computer science'),
 ('MATH201', 'Calculus I', 'Dr. Johnson', 'Differential and integral calculus'),
@@ -105,7 +94,6 @@ INSERT IGNORE INTO courses (course_code, course_name, instructor, description) V
 ('PHYS301', 'Physics I', 'Dr. Brown', 'Classical mechanics and thermodynamics'),
 ('HIST150', 'World History', 'Prof. Davis', 'Survey of world civilizations');
 
--- Insert sample announcements
 INSERT IGNORE INTO announcements (title, content) VALUES 
 ('Welcome to the New Semester!', 'We hope you have a successful academic year. Please check your course schedules and contact your advisors if you have any questions.'),
 ('Library Hours Extended', 'The university library will now be open 24/7 during exam periods. Please bring your student ID for after-hours access.'),

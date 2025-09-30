@@ -2,15 +2,12 @@
 require_once 'config.php';
 require_once 'db.php';
 
-// Require admin access
 requireAdmin();
 
 $error_message = '';
 $success_message = '';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate CSRF token
     $csrf_token = $_POST['csrf_token'] ?? '';
     if (!validateCSRFToken($csrf_token)) {
         $_SESSION['upload_error'] = 'Invalid security token. Please refresh and try again.';
@@ -22,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title'] ?? '');
     $description = sanitizeInput($_POST['description'] ?? '');
     
-    // Validate inputs
     if (!$course_id || !is_numeric($course_id)) {
         $_SESSION['upload_error'] = 'Invalid course selection.';
         header('Location: materials.php');
@@ -35,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
-    // Check if file was uploaded
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $_SESSION['upload_error'] = 'Please select a file to upload.';
         header('Location: materials.php?course_id=' . $course_id);
@@ -48,18 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file_size = $file['size'];
     $file_error = $file['error'];
     
-    // Check file size (max 10MB)
-    $max_size = 10 * 1024 * 1024; // 10MB in bytes
+    $max_size = 10 * 1024 * 1024;
     if ($file_size > $max_size) {
         $_SESSION['upload_error'] = 'File size exceeds 10MB limit.';
         header('Location: materials.php?course_id=' . $course_id);
         exit();
     }
     
-    // Get file extension
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
     
-    // Allowed file types with MIME mapping
     $allowed_types = [
         'pdf' => ['application/pdf'],
         'doc' => ['application/msword'],
@@ -79,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
-    // Verify course exists
     try {
         $stmt = $pdo->prepare("SELECT id FROM courses WHERE id = ?");
         $stmt->execute([$course_id]);
@@ -91,31 +82,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
         
-        // Create unique filename
         $unique_name = uniqid() . '_' . time() . '.' . $file_ext;
         $upload_dir = 'uploads/course_materials/';
         $upload_path = $upload_dir . $unique_name;
         
-        // Create directory if it doesn't exist
         if (!file_exists($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
         
-        // Move uploaded file
         if (move_uploaded_file($file_tmp, $upload_path)) {
-            // Get file MIME type and validate
             $file_type = mime_content_type($upload_path);
             
-            // Validate MIME type matches extension
             if (!in_array($file_type, $allowed_types[$file_ext])) {
-                // Delete uploaded file if MIME doesn't match
                 unlink($upload_path);
                 $_SESSION['upload_error'] = 'File type mismatch. The file content does not match its extension.';
                 header('Location: materials.php?course_id=' . $course_id);
                 exit();
             }
             
-            // Insert into database
             $stmt = $pdo->prepare("
                 INSERT INTO course_materials 
                 (course_id, title, description, file_name, file_path, file_size, file_type, uploaded_by) 

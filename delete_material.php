@@ -2,21 +2,18 @@
 require_once 'config.php';
 require_once 'db.php';
 
-// Require admin access
 if (!isLoggedIn() || !isAdmin()) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Admin access required']);
     exit();
 }
 
-// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
     exit();
 }
 
-// Validate CSRF token
 $csrf_token = $_POST['csrf_token'] ?? '';
 if (!validateCSRFToken($csrf_token)) {
     http_response_code(403);
@@ -32,7 +29,6 @@ if (!$material_id || !is_numeric($material_id)) {
 }
 
 try {
-    // Get material details
     $stmt = $pdo->prepare("SELECT * FROM course_materials WHERE id = ?");
     $stmt->execute([$material_id]);
     $material = $stmt->fetch();
@@ -42,12 +38,10 @@ try {
         exit();
     }
     
-    // Delete file from server
     if (file_exists($material['file_path'])) {
         unlink($material['file_path']);
     }
     
-    // Delete from database
     $stmt = $pdo->prepare("DELETE FROM course_materials WHERE id = ?");
     $stmt->execute([$material_id]);
     
