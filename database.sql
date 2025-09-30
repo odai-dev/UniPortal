@@ -83,16 +83,16 @@ ON CONFLICT (email) DO NOTHING;
 
 -- Insert sample courses
 INSERT INTO courses (course_code, course_name, instructor, description) VALUES 
-('CS101', 'Introduction to Computer Science', 'Dr. Smith', 'Basic concepts of programming and computer science'),
-('MATH201', 'Calculus I', 'Dr. Johnson', 'Differential and integral calculus'),
-('ENG102', 'English Composition', 'Prof. Williams', 'Academic writing and communication skills'),
-('PHYS301', 'Physics I', 'Dr. Brown', 'Classical mechanics and thermodynamics'),
-('HIST150', 'World History', 'Prof. Davis', 'Survey of world civilizations')
+('CS101', 'Introduction to Computer Science', 'Dr. Ahmed Al-Qadhi', 'Fundamental concepts of programming and computer science'),
+('MATH201', 'Calculus I', 'Dr. Mohammed Al-Jabali', 'Differential and integral calculus with applications'),
+('ENG102', 'Academic English Skills', 'Prof. Sarah Al-Halimi', 'Writing and communication skills for academic purposes'),
+('PHYS301', 'General Physics I', 'Dr. Abdulkarim Al-Shaibani', 'Classical mechanics and thermodynamics'),
+('HIST150', 'History of Yemen', 'Prof. Fatima Ba-Wazir', 'Overview of Yemen''s ancient and modern history')
 ON CONFLICT (course_code) DO NOTHING;
 
 -- Insert sample announcements
 INSERT INTO announcements (title, content) VALUES 
-('Welcome to the New Semester!', 'We hope you have a successful academic year. Please check your course schedules and contact your advisors if you have any questions.'),
-('Library Hours Extended', 'The university library will now be open 24/7 during exam periods. Please bring your student ID for after-hours access.'),
-('Registration for Spring Semester', 'Spring semester registration opens next Monday. Please meet with your academic advisor before registering for classes.')
+('Welcome to the New Semester!', 'We wish you a successful semester. Please check your course schedules and contact your academic advisor for any questions.'),
+('Library Hours Extended', 'The university library will remain open 24/7 during exam periods. Please bring your student ID for late-hour access.'),
+('Spring Semester Registration', 'Registration for the spring semester will open next Monday. Kindly meet with your academic advisor before registering.')
 ON CONFLICT DO NOTHING;
