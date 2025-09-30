@@ -53,6 +53,11 @@ require_once 'db.php';
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="materials.php">
+                        <i class="fas fa-folder-open me-1"></i>Materials
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="grades.php">
                         <i class="fas fa-chart-line me-1"></i>Grades
                     </a>
