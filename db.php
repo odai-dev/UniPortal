@@ -2,17 +2,13 @@
 require_once 'config.php';
 session_start();
 
-$host = $_ENV['PGHOST'] ?? $_ENV['DB_HOST'] ?? 'localhost';
-$port = $_ENV['PGPORT'] ?? $_ENV['DB_PORT'] ?? 3306;
-$dbname = $_ENV['PGDATABASE'] ?? $_ENV['DB_NAME'] ?? 'fitness_center';
-$username = $_ENV['PGUSER'] ?? $_ENV['DB_USER'] ?? 'root';
-$password = $_ENV['PGPASSWORD'] ?? $_ENV['DB_PASS'] ?? '';
+$host = 'localhost';
+$port = 3306;
+$dbname = 'fitness_center';
+$username = 'root';
+$password = '';
 
-if (isset($_ENV['PGHOST']) || isset($_ENV['PGDATABASE'])) {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-} else {
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
-}
+$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
 try {
     $pdo = new PDO($dsn, $username, $password, [
@@ -21,10 +17,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
     
-    if (isset($_ENV['PGHOST']) || isset($_ENV['PGDATABASE'])) {
-    } else {
-        $pdo->exec("SET NAMES utf8");
-    }
+    $pdo->exec("SET NAMES utf8");
     
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());

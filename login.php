@@ -3,7 +3,6 @@ $page_title = 'Login';
 require_once 'config.php';
 require_once 'db.php';
 
-// Redirect if already logged in
 if (isLoggedIn()) {
     header('Location: dashboard.php');
     exit();
@@ -12,9 +11,7 @@ if (isLoggedIn()) {
 $error_message = '';
 $success_message = '';
 
-// Handle form submission
 if ($_POST) {
-    // Validate CSRF token
     $csrf_token = $_POST['csrf_token'] ?? '';
     if (!validateCSRFToken($csrf_token)) {
         $error_message = 'Invalid security token. Please refresh and try again.';
@@ -24,7 +21,6 @@ if ($_POST) {
         $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-        // Validate reCAPTCHA
         if (!verifyRecaptcha($recaptcha_response)) {
             $error_message = 'Please complete the reCAPTCHA verification.';
         } elseif (empty($email) || empty($password)) {
@@ -33,23 +29,19 @@ if ($_POST) {
             $error_message = 'Please use a valid Gmail or Hotmail email address.';
         } else {
             try {
-                // Check user credentials
                 $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE email = ?");
                 $stmt->execute([$email]);
                 $user = $stmt->fetch();
 
                 if ($user && password_verify($password, $user['password'])) {
-                    // Invalidate old CSRF token and regenerate session
                     invalidateCSRFToken();
                     regenerateSession();
                     
-                    // Set session variables
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['name'] = $user['name'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['role'] = $user['role'];
 
-                    // Set remember me cookie if checked (more secure)
                     if ($remember_me) {
                         $token = generateRememberToken($user['id']);
                         if ($token) {
@@ -70,17 +62,14 @@ if ($_POST) {
     }
 }
 
-// Check for remember me cookie
 if (!isLoggedIn() && isset($_COOKIE['remember_me'])) {
     $token = $_COOKIE['remember_me'];
     $user_data = validateRememberToken($token);
     
     if ($user_data) {
-        // Invalidate old CSRF token and regenerate session for auto-login
         invalidateCSRFToken();
         regenerateSession();
         
-        // Auto login
         $_SESSION['user_id'] = $user_data['user_id'];
         $_SESSION['name'] = $user_data['name'];
         $_SESSION['email'] = $user_data['email'];
@@ -89,12 +78,10 @@ if (!isLoggedIn() && isset($_COOKIE['remember_me'])) {
         header('Location: dashboard.php');
         exit();
     } else {
-        // Remove invalid cookie
         setcookie('remember_me', '', time() - 3600, '/', '', false, true);
     }
 }
 
-// Check for registration success message
 if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     $success_message = 'Registration successful! Please login with your credentials.';
 }
@@ -107,16 +94,10 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?> - <?= SITE_NAME ?></title>
     
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
     
-    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
@@ -176,7 +157,6 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA Verification -->
                 <div class="mb-3">
                     <label class="form-label">Security Verification</label>
                     <div class="g-recaptcha" data-sitekey="<?= $_ENV['RECAPTCHA_SITE_KEY'] ?? '' ?>"></div>
@@ -211,12 +191,9 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
 
 <script src="form-enhancements.js"></script>
 
-<!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Theme Toggle JavaScript -->
 <script>
-// Theme Toggle Functionality
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -247,7 +224,6 @@ function toggleTheme() {
     updateThemeToggle(newTheme);
 }
 
-// Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem('theme')) {
         const theme = e.matches ? 'dark' : 'light';
@@ -256,7 +232,6 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
-// Initialize theme
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTheme);
 } else {

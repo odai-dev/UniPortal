@@ -3,41 +3,32 @@ $page_title = 'Dashboard';
 require_once 'config.php';
 require_once 'db.php';
 
-// Require login (before any HTML output)
 requireLogin();
 
 require_once 'header.php';
 
-// Get statistics for dashboard
 try {
-    // Get total members count
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role = 'member'");
     $stmt->execute();
     $total_members = $stmt->fetchColumn();
 
-    // Get total classes count
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM classes");
     $stmt->execute();
     $total_classes = $stmt->fetchColumn();
 
-    // Get total announcements count
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM announcements");
     $stmt->execute();
     $total_announcements = $stmt->fetchColumn();
 
-    // Member-specific data
     if (!isAdmin()) {
-        // Get enrolled classes count
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM memberships WHERE user_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $enrolled_classes = $stmt->fetchColumn();
 
-        // Get progress count
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM progress WHERE user_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $total_progress = $stmt->fetchColumn();
 
-        // Get recent progress
         $stmt = $pdo->prepare("
             SELECT p.performance_score, c.class_name, c.class_code, p.created_at 
             FROM progress p 
@@ -50,7 +41,6 @@ try {
         $recent_progress = $stmt->fetchAll();
     }
 
-    // Get recent announcements
     $stmt = $pdo->prepare("SELECT title, content, created_at FROM announcements ORDER BY created_at DESC LIMIT 5");
     $stmt->execute();
     $recent_announcements = $stmt->fetchAll();
@@ -69,7 +59,6 @@ try {
     </div>
 </div>
 
-<!-- Statistics Cards -->
 <div class="row mb-4 stagger-animation">
     <?php if (isAdmin()): ?>
         <div class="col-md-3 mb-3">
@@ -186,7 +175,6 @@ try {
     <?php endif; ?>
 </div>
 
-<!-- System Overview Section -->
 <?php if (isAdmin()): ?>
 <div class="row mb-4">
     <div class="col-md-12">
@@ -233,9 +221,7 @@ try {
 </div>
 <?php endif; ?>
 
-<!-- Content Row -->
 <div class="row">
-    <!-- Quick Actions -->
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -273,7 +259,6 @@ try {
         </div>
     </div>
 
-    <!-- Recent Announcements -->
     <div class="col-md-6 mb-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -306,7 +291,6 @@ try {
     </div>
 </div>
 
-<!-- Member's Recent Progress -->
 <?php if (!isAdmin() && !empty($recent_progress)): ?>
 <div class="row">
     <div class="col-12">

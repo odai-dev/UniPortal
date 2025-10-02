@@ -1,8 +1,6 @@
 <?php
 define('SITE_NAME', 'FitZone Fitness Center');
-$domain = $_ENV['REPLIT_DEV_DOMAIN'] ?? 'localhost:5000';
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'https';
-define('SITE_URL', $protocol . '://' . $domain);
+define('SITE_URL', 'http://localhost/fitness_center');
 
 define('SESSION_TIMEOUT', 3600);
 define('REMEMBER_ME_DURATION', 2592000);
@@ -18,5 +16,4 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 date_default_timezone_set('America/New_York');
-
 ?>

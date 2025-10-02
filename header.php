@@ -2,7 +2,6 @@
 require_once 'config.php';
 require_once 'db.php';
 
-// Get current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -12,29 +11,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($page_title) ? $page_title . ' - ' . SITE_NAME : SITE_NAME ?></title>
     
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
 
 <?php if (isLoggedIn()): ?>
-    <!-- App Layout with Sidebar -->
     <div class="app-layout">
-        <!-- Left Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
-            <!-- Sidebar Header -->
             <div class="sidebar-header">
                 <a href="dashboard.php" class="sidebar-logo">
                     <i class="fas fa-dumbbell"></i>
@@ -45,7 +34,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </div>
             
-            <!-- Sidebar Navigation -->
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Main Menu</div>
@@ -132,7 +120,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </div>
             </nav>
             
-            <!-- Sidebar Footer - User Profile -->
             <div class="sidebar-footer">
                 <div class="user-profile">
                     <div class="user-avatar">
@@ -146,12 +133,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </div>
         </aside>
         
-        <!-- Sidebar Overlay for Mobile -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         
-        <!-- Main Content Area -->
         <div class="main-content">
-            <!-- Top Bar -->
             <div class="topbar">
                 <div class="topbar-left">
                     <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -167,9 +151,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </div>
             </div>
             
-            <!-- Page Content -->
             <div class="content-container page-transition">
 <?php else: ?>
-    <!-- For non-logged-in users (auth pages) -->
     <div class="page-transition">
 <?php endif; ?>

@@ -1,23 +1,18 @@
-            </div> <!-- Close content-container -->
-        </div> <!-- Close main-content -->
-    </div> <!-- Close app-layout -->
+            </div>
+        </div>
+    </div>
 <?php if (!isLoggedIn()): ?>
-    </div> <!-- Close page-transition for auth pages -->
+    </div>
 <?php endif; ?>
 
-<!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
-<!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-<!-- Custom JavaScript -->
 <script>
-// Initialize DataTables on all tables with class 'datatable'
 $(document).ready(function() {
     $('.datatable').DataTable({
         "pageLength": 10,
@@ -31,12 +26,10 @@ $(document).ready(function() {
     });
 });
 
-// Auto-hide alerts after 5 seconds
 setTimeout(function() {
     $('.alert').fadeOut('slow');
 }, 5000);
 
-// Mobile Menu Toggle
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -55,7 +48,6 @@ if (sidebarOverlay) {
     });
 }
 
-// Theme Toggle Functionality
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -88,14 +80,12 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
     updateThemeToggle(newTheme);
     
-    // Smooth transition
     document.documentElement.style.transition = 'all 0.3s ease';
     setTimeout(() => {
         document.documentElement.style.transition = '';
     }, 300);
 }
 
-// Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem('theme')) {
         const theme = e.matches ? 'dark' : 'light';
@@ -104,10 +94,8 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     }
 });
 
-// Initialize theme on page load
 document.addEventListener('DOMContentLoaded', initTheme);
 
-// For pages that don't have the theme toggle (like auth pages)
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTheme);
 } else {
