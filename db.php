@@ -101,14 +101,14 @@ function invalidateCSRFToken() {
 }
 
 function verifyRecaptcha($recaptcha_response) {
-    if (empty($recaptcha_response)) {
-        return false;
-    }
-    
     $secret_key = $_ENV['RECAPTCHA_SECRET_KEY'] ?? '';
     
     if (empty($secret_key)) {
-        error_log('reCAPTCHA secret key not configured');
+        error_log('reCAPTCHA not configured - skipping verification');
+        return true;
+    }
+    
+    if (empty($recaptcha_response)) {
         return false;
     }
     
