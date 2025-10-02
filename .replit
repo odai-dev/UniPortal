@@ -1,4 +1,4 @@
-modules = ["php-8.2", "web", "nodejs-20", "postgresql-17"]
+modules = ["php-8.2", "web", "nodejs-20", "postgresql-17", "php-8.4"]
 [agent]
 expertMode = true
 
@@ -32,22 +32,6 @@ waitForPort = 5000
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 33339
-externalPort = 3003
-
-[[ports]]
-localPort = 36377
-externalPort = 3001
-
-[[ports]]
-localPort = 36623
-externalPort = 3002
-
-[[ports]]
-localPort = 44435
-externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"
