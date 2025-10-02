@@ -2,7 +2,6 @@
 $page_title = 'Register';
 require_once 'config.php';
 require_once 'db.php';
-require_once 'captcha_verify.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
@@ -24,67 +23,67 @@ if ($_POST) {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-        $captcha_token = $_POST['captcha_token'] ?? '';
+        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate custom CAPTCHA verification
-    if (!verifyCustomCaptcha($captcha_token)) {
-        $error_message = 'Please complete the CAPTCHA verification.';
-    } elseif (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
-        $error_message = 'Please fill in all fields.';
-    } elseif (!validateEmail($email)) {
-        $error_message = 'Please use a valid Gmail or Hotmail email address.';
-    } elseif (!validatePassword($password)) {
-        $error_message = 'Password must be at least 8 characters long and contain letters, numbers, and symbols.';
-    } elseif ($password !== $confirm_password) {
-        $error_message = 'Passwords do not match.';
-    } else {
-        try {
-            // Check if email already exists
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $email_exists = $stmt->fetchColumn();
+        // Validate reCAPTCHA
+        if (!verifyRecaptcha($recaptcha_response)) {
+            $error_message = 'Please complete the reCAPTCHA verification.';
+        } elseif (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
+            $error_message = 'Please fill in all fields.';
+        } elseif (!validateEmail($email)) {
+            $error_message = 'Please use a valid Gmail or Hotmail email address.';
+        } elseif (!validatePassword($password)) {
+            $error_message = 'Password must be at least 8 characters long and contain letters, numbers, and symbols.';
+        } elseif ($password !== $confirm_password) {
+            $error_message = 'Passwords do not match.';
+        } else {
+            try {
+                // Check if email already exists
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                $email_exists = $stmt->fetchColumn();
 
-            if ($email_exists > 0) {
-                $error_message = 'Email address is already registered. Please use a different email.';
-            } else {
-                // Hash password and insert user
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                
-                $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'member')");
-                $stmt->execute([$name, $email, $hashed_password]);
-                
-                // Get the new user ID
-                $user_id = $pdo->lastInsertId();
-                
-                // Auto-login if remember me is checked
-                if ($remember_me) {
-                    // Invalidate old CSRF token and regenerate session
-                    invalidateCSRFToken();
-                    regenerateSession();
-                    
-                    $_SESSION['user_id'] = $user_id;
-                    $_SESSION['name'] = $name;
-                    $_SESSION['email'] = $email;
-                    $_SESSION['role'] = 'member';
-                    
-                    $token = generateRememberToken($user_id);
-                    if ($token) {
-                        setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
-                    }
-                    
-                    header('Location: dashboard.php');
-                    exit();
+                if ($email_exists > 0) {
+                    $error_message = 'Email address is already registered. Please use a different email.';
                 } else {
-                    // Redirect to login with success message
-                    header('Location: login.php?registered=1');
-                    exit();
+                    // Hash password and insert user
+                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                    
+                    $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'member')");
+                    $stmt->execute([$name, $email, $hashed_password]);
+                    
+                    // Get the new user ID
+                    $user_id = $pdo->lastInsertId();
+                    
+                    // Auto-login if remember me is checked
+                    if ($remember_me) {
+                        // Invalidate old CSRF token and regenerate session
+                        invalidateCSRFToken();
+                        regenerateSession();
+                        
+                        $_SESSION['user_id'] = $user_id;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['email'] = $email;
+                        $_SESSION['role'] = 'member';
+                        
+                        $token = generateRememberToken($user_id);
+                        if ($token) {
+                            setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                        }
+                        
+                        header('Location: dashboard.php');
+                        exit();
+                    } else {
+                        // Redirect to login with success message
+                        header('Location: login.php?registered=1');
+                        exit();
+                    }
                 }
+            } catch (PDOException $e) {
+                $error_message = 'Database error occurred. Please try again.';
             }
-        } catch (PDOException $e) {
-            $error_message = 'Database error occurred. Please try again.';
         }
-    }
     }
 }
 ?>
@@ -104,7 +103,9 @@ if ($_POST) {
     
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
-    <link href="captcha.css" rel="stylesheet">
+    
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -180,10 +181,10 @@ if ($_POST) {
                     </div>
                 </div>
 
-                <!-- Custom CAPTCHA Verification -->
+                <!-- Google reCAPTCHA Verification -->
                 <div class="mb-3">
                     <label class="form-label">Security Verification</label>
-                    <div id="custom-captcha-container"></div>
+                    <div class="g-recaptcha" data-sitekey="<?= $_ENV['RECAPTCHA_SITE_KEY'] ?? '' ?>"></div>
                     <small class="form-text text-muted">Please verify that you are not a robot</small>
                 </div>
 
@@ -213,7 +214,6 @@ if ($_POST) {
     </div>
 </div>
 
-<script src="captcha.js"></script>
 <script src="form-enhancements.js"></script>
 
 <!-- Bootstrap 5 JS -->

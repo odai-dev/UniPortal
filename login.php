@@ -2,7 +2,6 @@
 $page_title = 'Login';
 require_once 'config.php';
 require_once 'db.php';
-require_once 'captcha_verify.php';
 
 // Redirect if already logged in
 if (isLoggedIn()) {
@@ -22,52 +21,52 @@ if ($_POST) {
     } else {
         $email = sanitizeInput($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-        $captcha_token = $_POST['captcha_token'] ?? '';
+        $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
         $remember_me = isset($_POST['remember_me']);
 
-    // Validate custom CAPTCHA verification
-    if (!verifyCustomCaptcha($captcha_token)) {
-        $error_message = 'Please complete the CAPTCHA verification.';
-    } elseif (empty($email) || empty($password)) {
-        $error_message = 'Please fill in all fields.';
-    } elseif (!validateEmail($email)) {
-        $error_message = 'Please use a valid Gmail or Hotmail email address.';
-    } else {
-        try {
-            // Check user credentials
-            $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
+        // Validate reCAPTCHA
+        if (!verifyRecaptcha($recaptcha_response)) {
+            $error_message = 'Please complete the reCAPTCHA verification.';
+        } elseif (empty($email) || empty($password)) {
+            $error_message = 'Please fill in all fields.';
+        } elseif (!validateEmail($email)) {
+            $error_message = 'Please use a valid Gmail or Hotmail email address.';
+        } else {
+            try {
+                // Check user credentials
+                $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                $user = $stmt->fetch();
 
-            if ($user && password_verify($password, $user['password'])) {
-                // Invalidate old CSRF token and regenerate session
-                invalidateCSRFToken();
-                regenerateSession();
-                
-                // Set session variables
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
+                if ($user && password_verify($password, $user['password'])) {
+                    // Invalidate old CSRF token and regenerate session
+                    invalidateCSRFToken();
+                    regenerateSession();
+                    
+                    // Set session variables
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['name'] = $user['name'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['role'] = $user['role'];
 
-                // Set remember me cookie if checked (more secure)
-                if ($remember_me) {
-                    $token = generateRememberToken($user['id']);
-                    if ($token) {
-                        setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                    // Set remember me cookie if checked (more secure)
+                    if ($remember_me) {
+                        $token = generateRememberToken($user['id']);
+                        if ($token) {
+                            setcookie('remember_me', $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                        }
                     }
-                }
 
-                header('Location: dashboard.php');
-                exit();
-            } else {
-                $error_message = 'Invalid email or password.';
+                    header('Location: dashboard.php');
+                    exit();
+                } else {
+                    $error_message = 'Invalid email or password.';
+                }
+            } catch (PDOException $e) {
+                error_log('Login PDOException: ' . $e->getMessage());
+                $error_message = 'Database error occurred. Please try again.';
             }
-        } catch (PDOException $e) {
-            error_log('Login PDOException: ' . $e->getMessage());
-            $error_message = 'Database error occurred. Please try again.';
         }
-    }
     }
 }
 
@@ -116,7 +115,9 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
-    <link href="captcha.css" rel="stylesheet">
+    
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -175,10 +176,10 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     </div>
                 </div>
 
-                <!-- Custom CAPTCHA Verification -->
+                <!-- Google reCAPTCHA Verification -->
                 <div class="mb-3">
                     <label class="form-label">Security Verification</label>
-                    <div id="custom-captcha-container"></div>
+                    <div class="g-recaptcha" data-sitekey="<?= $_ENV['RECAPTCHA_SITE_KEY'] ?? '' ?>"></div>
                     <small class="form-text text-muted">Please verify that you are not a robot</small>
                 </div>
 
@@ -208,7 +209,6 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
     </div>
 </div>
 
-<script src="captcha.js"></script>
 <script src="form-enhancements.js"></script>
 
 <!-- Bootstrap 5 JS -->

@@ -100,6 +100,48 @@ function invalidateCSRFToken() {
     unset($_SESSION['csrf_token'], $_SESSION['csrf_token_time']);
 }
 
+function verifyRecaptcha($recaptcha_response) {
+    if (empty($recaptcha_response)) {
+        return false;
+    }
+    
+    $secret_key = $_ENV['RECAPTCHA_SECRET_KEY'] ?? '';
+    
+    if (empty($secret_key)) {
+        error_log('reCAPTCHA secret key not configured');
+        return false;
+    }
+    
+    $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+    
+    $data = [
+        'secret' => $secret_key,
+        'response' => $recaptcha_response,
+        'remoteip' => $_SERVER['REMOTE_ADDR']
+    ];
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $verify_url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    
+    $response = curl_exec($ch);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+    
+    if ($response === false) {
+        error_log('reCAPTCHA verification cURL error: ' . $curl_error);
+        return false;
+    }
+    
+    $response_data = json_decode($response, true);
+    
+    return isset($response_data['success']) && $response_data['success'] === true;
+}
+
 function regenerateSession() {
     session_regenerate_id(true);
 }
