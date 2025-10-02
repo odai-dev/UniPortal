@@ -97,8 +97,9 @@ if (isAdmin()) {
                             <option value="">Select a subject</option>
                             <option value="General Inquiry" <?= (isset($_POST['subject']) && $_POST['subject'] === 'General Inquiry') ? 'selected' : '' ?>>General Inquiry</option>
                             <option value="Technical Support" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Technical Support') ? 'selected' : '' ?>>Technical Support</option>
-                            <option value="Course Information" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Course Information') ? 'selected' : '' ?>>Course Information</option>
-                            <option value="Grade Inquiry" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Grade Inquiry') ? 'selected' : '' ?>>Grade Inquiry</option>
+                            <option value="Class Information" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Class Information') ? 'selected' : '' ?>>Class Information</option>
+                            <option value="Trainer Consultation" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Trainer Consultation') ? 'selected' : '' ?>>Trainer Consultation</option>
+                            <option value="Membership Inquiry" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Membership Inquiry') ? 'selected' : '' ?>>Membership Inquiry</option>
                             <option value="Account Issues" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Account Issues') ? 'selected' : '' ?>>Account Issues</option>
                             <option value="Feedback/Suggestions" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Feedback/Suggestions') ? 'selected' : '' ?>>Feedback/Suggestions</option>
                             <option value="Other" <?= (isset($_POST['subject']) && $_POST['subject'] === 'Other') ? 'selected' : '' ?>>Other</option>
@@ -148,29 +149,29 @@ if (isAdmin()) {
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <h6><i class="fas fa-university me-2 text-primary"></i>University Office</h6>
-                    <p class="text-muted small mb-0">Main Campus, Administration Building</p>
-                    <p class="text-muted small">Room 205, Second Floor</p>
+                    <h6><i class="fas fa-dumbbell me-2 text-primary"></i>Fitness Center</h6>
+                    <p class="text-muted small mb-0">Main Gym, Reception Desk</p>
+                    <p class="text-muted small">Ground Floor, Front Entrance</p>
                 </div>
 
                 <div class="mb-3">
-                    <h6><i class="fas fa-clock me-2 text-primary"></i>Office Hours</h6>
-                    <p class="text-muted small mb-0">Monday - Friday: 9:00 AM - 5:00 PM</p>
-                    <p class="text-muted small mb-0">Saturday: 10:00 AM - 2:00 PM</p>
-                    <p class="text-muted small">Sunday: Closed</p>
+                    <h6><i class="fas fa-clock me-2 text-primary"></i>Gym Hours</h6>
+                    <p class="text-muted small mb-0">Monday - Friday: 6:00 AM - 10:00 PM</p>
+                    <p class="text-muted small mb-0">Saturday - Sunday: 8:00 AM - 8:00 PM</p>
+                    <p class="text-muted small">Open 7 Days a Week</p>
                 </div>
 
                 <div class="mb-3">
                     <h6><i class="fas fa-envelope me-2 text-primary"></i>Email Support</h6>
-                    <p class="text-muted small mb-0">General: support@university.edu</p>
-                    <p class="text-muted small mb-0">Technical: tech@university.edu</p>
-                    <p class="text-muted small">Academic: academic@university.edu</p>
+                    <p class="text-muted small mb-0">General: info@fitnesscenter.com</p>
+                    <p class="text-muted small mb-0">Technical: support@fitnesscenter.com</p>
+                    <p class="text-muted small">Trainers: trainers@fitnesscenter.com</p>
                 </div>
 
                 <div class="mb-3">
                     <h6><i class="fas fa-phone me-2 text-primary"></i>Phone Numbers</h6>
-                    <p class="text-muted small mb-0">Main: (555) 123-4567</p>
-                    <p class="text-muted small mb-0">Admissions: (555) 123-4568</p>
+                    <p class="text-muted small mb-0">Main: (555) FIT-NESS</p>
+                    <p class="text-muted small mb-0">Membership: (555) 123-4568</p>
                     <p class="text-muted small">Emergency: (555) 123-4569</p>
                 </div>
 
@@ -205,12 +206,12 @@ if (isAdmin()) {
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                How do I enroll in courses?
+                                How do I register for classes?
                             </button>
                         </h2>
                         <div id="faq2" class="accordion-collapse collapse">
                             <div class="accordion-body">
-                                <small>Visit the Courses page, browse available courses, and click "View Details" then "Enroll" on courses you're interested in.</small>
+                                <small>Visit the Classes page, browse available fitness classes, and click "View Details" then "Register" on classes you're interested in.</small>
                             </div>
                         </div>
                     </div>
@@ -218,12 +219,12 @@ if (isAdmin()) {
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                Where can I view my grades?
+                                Where can I view my progress?
                             </button>
                         </h2>
                         <div id="faq3" class="accordion-collapse collapse">
                             <div class="accordion-body">
-                                <small>Click on "Grades" in the navigation menu to view all your course grades and academic performance.</small>
+                                <small>Click on "Progress" in the navigation menu to view your fitness progress and performance in all registered classes.</small>
                             </div>
                         </div>
                     </div>

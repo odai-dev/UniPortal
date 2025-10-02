@@ -10,44 +10,44 @@ require_once 'header.php';
 
 // Get statistics for dashboard
 try {
-    // Get total students count
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role = 'student'");
+    // Get total members count
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE role = 'member'");
     $stmt->execute();
-    $total_students = $stmt->fetchColumn();
+    $total_members = $stmt->fetchColumn();
 
-    // Get total courses count
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM courses");
+    // Get total classes count
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM classes");
     $stmt->execute();
-    $total_courses = $stmt->fetchColumn();
+    $total_classes = $stmt->fetchColumn();
 
     // Get total announcements count
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM announcements");
     $stmt->execute();
     $total_announcements = $stmt->fetchColumn();
 
-    // Student-specific data
+    // Member-specific data
     if (!isAdmin()) {
-        // Get enrolled courses count
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ?");
+        // Get enrolled classes count
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM memberships WHERE user_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
-        $enrolled_courses = $stmt->fetchColumn();
+        $enrolled_classes = $stmt->fetchColumn();
 
-        // Get grades count
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM grades WHERE user_id = ?");
+        // Get progress count
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM progress WHERE user_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
-        $total_grades = $stmt->fetchColumn();
+        $total_progress = $stmt->fetchColumn();
 
-        // Get recent grades
+        // Get recent progress
         $stmt = $pdo->prepare("
-            SELECT g.grade, c.course_name, c.course_code, g.created_at 
-            FROM grades g 
-            JOIN courses c ON g.course_id = c.id 
-            WHERE g.user_id = ? 
-            ORDER BY g.created_at DESC 
+            SELECT p.performance_score, c.class_name, c.class_code, p.created_at 
+            FROM progress p 
+            JOIN classes c ON p.class_id = c.id 
+            WHERE p.user_id = ? 
+            ORDER BY p.created_at DESC 
             LIMIT 5
         ");
         $stmt->execute([$_SESSION['user_id']]);
-        $recent_grades = $stmt->fetchAll();
+        $recent_progress = $stmt->fetchAll();
     }
 
     // Get recent announcements
@@ -76,8 +76,8 @@ try {
             <div class="stats-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h3><?= $total_students ?></h3>
-                        <p>Total Students</p>
+                        <h3><?= $total_members ?></h3>
+                        <p>Total Members</p>
                     </div>
                     <div class="card-icon">
                         <i class="fas fa-users"></i>
@@ -90,11 +90,11 @@ try {
             <div class="stats-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h3><?= $total_courses ?></h3>
-                        <p>Total Courses</p>
+                        <h3><?= $total_classes ?></h3>
+                        <p>Total Classes</p>
                     </div>
                     <div class="card-icon">
-                        <i class="fas fa-book"></i>
+                        <i class="fas fa-dumbbell"></i>
                     </div>
                 </div>
             </div>
@@ -119,7 +119,7 @@ try {
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3><?= date('Y') ?></h3>
-                        <p>Academic Year</p>
+                        <p>Current Year</p>
                     </div>
                     <div class="card-icon">
                         <i class="fas fa-calendar-alt"></i>
@@ -132,11 +132,11 @@ try {
             <div class="stats-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h3><?= $enrolled_courses ?? 0 ?></h3>
-                        <p>My Courses</p>
+                        <h3><?= $enrolled_classes ?? 0 ?></h3>
+                        <p>My Classes</p>
                     </div>
                     <div class="card-icon">
-                        <i class="fas fa-book-open"></i>
+                        <i class="fas fa-dumbbell"></i>
                     </div>
                 </div>
             </div>
@@ -146,8 +146,8 @@ try {
             <div class="stats-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h3><?= $total_grades ?? 0 ?></h3>
-                        <p>Graded Courses</p>
+                        <h3><?= $total_progress ?? 0 ?></h3>
+                        <p>Tracked Progress</p>
                     </div>
                     <div class="card-icon">
                         <i class="fas fa-chart-line"></i>
@@ -200,16 +200,16 @@ try {
                 <div class="row text-center">
                     <div class="col-md-3">
                         <div class="p-3">
-                            <i class="fas fa-user-graduate fa-3x text-primary mb-2"></i>
-                            <h4><?= $total_students ?></h4>
-                            <p class="text-muted">Total Students</p>
+                            <i class="fas fa-users fa-3x text-primary mb-2"></i>
+                            <h4><?= $total_members ?></h4>
+                            <p class="text-muted">Total Members</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="p-3">
-                            <i class="fas fa-book fa-3x text-success mb-2"></i>
-                            <h4><?= $total_courses ?></h4>
-                            <p class="text-muted">Available Courses</p>
+                            <i class="fas fa-dumbbell fa-3x text-success mb-2"></i>
+                            <h4><?= $total_classes ?></h4>
+                            <p class="text-muted">Available Classes</p>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -247,10 +247,10 @@ try {
                 <?php if (isAdmin()): ?>
                     <div class="d-grid gap-2">
                         <a href="admin_students.php" class="btn btn-outline-primary">
-                            <i class="fas fa-users me-2"></i>Manage Students
+                            <i class="fas fa-users me-2"></i>Manage Members
                         </a>
                         <a href="admin_courses.php" class="btn btn-outline-primary">
-                            <i class="fas fa-book-open me-2"></i>Manage Courses
+                            <i class="fas fa-calendar-alt me-2"></i>Manage Classes
                         </a>
                         <a href="news.php" class="btn btn-outline-primary">
                             <i class="fas fa-bullhorn me-2"></i>View Announcements
@@ -259,10 +259,10 @@ try {
                 <?php else: ?>
                     <div class="d-grid gap-2">
                         <a href="courses.php" class="btn btn-outline-primary">
-                            <i class="fas fa-book me-2"></i>Browse Courses
+                            <i class="fas fa-dumbbell me-2"></i>Browse Classes
                         </a>
                         <a href="grades.php" class="btn btn-outline-primary">
-                            <i class="fas fa-chart-line me-2"></i>View My Grades
+                            <i class="fas fa-chart-line me-2"></i>View My Progress
                         </a>
                         <a href="profile.php" class="btn btn-outline-primary">
                             <i class="fas fa-user-edit me-2"></i>Update Profile
@@ -306,14 +306,14 @@ try {
     </div>
 </div>
 
-<!-- Student's Recent Grades -->
-<?php if (!isAdmin() && !empty($recent_grades)): ?>
+<!-- Member's Recent Progress -->
+<?php if (!isAdmin() && !empty($recent_progress)): ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-chart-line me-2"></i>Recent Grades
+                    <i class="fas fa-chart-line me-2"></i>Recent Progress
                 </h5>
             </div>
             <div class="card-body">
@@ -321,22 +321,22 @@ try {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Grade</th>
+                                <th>Class Code</th>
+                                <th>Class Name</th>
+                                <th>Performance</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($recent_grades as $grade): ?>
+                            <?php foreach ($recent_progress as $prog): ?>
                                 <tr>
-                                    <td><strong><?= sanitizeInput($grade['course_code']) ?></strong></td>
-                                    <td><?= sanitizeInput($grade['course_name']) ?></td>
+                                    <td><strong><?= sanitizeInput($prog['class_code']) ?></strong></td>
+                                    <td><?= sanitizeInput($prog['class_name']) ?></td>
                                     <td>
-                                        <span class="badge bg-success"><?= sanitizeInput($grade['grade']) ?></span>
+                                        <span class="badge bg-success"><?= sanitizeInput($prog['performance_score']) ?></span>
                                     </td>
                                     <td>
-                                        <small><?= date('M j, Y', strtotime($grade['created_at'])) ?></small>
+                                        <small><?= date('M j, Y', strtotime($prog['created_at'])) ?></small>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -344,7 +344,7 @@ try {
                     </table>
                 </div>
                 <a href="grades.php" class="btn btn-outline-primary">
-                    <i class="fas fa-eye me-1"></i>View All Grades
+                    <i class="fas fa-eye me-1"></i>View All Progress
                 </a>
             </div>
         </div>

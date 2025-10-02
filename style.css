@@ -1,29 +1,29 @@
-/* University Student Portal - Modern UI */
+/* FitZone Fitness Center - Modern UI */
 
 /* CSS Custom Properties for Design System */
 :root {
-    /* Color Palette */
-    --primary-50: #f0f4ff;
-    --primary-100: #e0eaff;
-    --primary-200: #c7d8ff;
-    --primary-300: #a4bcff;
-    --primary-400: #8195ff;
-    --primary-500: #667eea;
-    --primary-600: #5a67d8;
-    --primary-700: #4c51bf;
-    --primary-800: #434190;
-    --primary-900: #3c366b;
+    /* Color Palette - Energetic Fitness Theme */
+    --primary-50: #fff5f0;
+    --primary-100: #ffe4d6;
+    --primary-200: #ffc9ad;
+    --primary-300: #ffa875;
+    --primary-400: #ff8242;
+    --primary-500: #ff6b35;
+    --primary-600: #f05424;
+    --primary-700: #d93d0f;
+    --primary-800: #b23010;
+    --primary-900: #8b2710;
     
-    --secondary-50: #faf8ff;
-    --secondary-100: #f3f0ff;
-    --secondary-200: #e8e1ff;
-    --secondary-300: #d6c7ff;
-    --secondary-400: #c1a3ff;
-    --secondary-500: #764ba2;
-    --secondary-600: #68428a;
-    --secondary-700: #5a3972;
-    --secondary-800: #4c305a;
-    --secondary-900: #3e2742;
+    --secondary-50: #f0fdf4;
+    --secondary-100: #dcfce7;
+    --secondary-200: #bbf7d0;
+    --secondary-300: #86efac;
+    --secondary-400: #4ade80;
+    --secondary-500: #22c55e;
+    --secondary-600: #16a34a;
+    --secondary-700: #15803d;
+    --secondary-800: #166534;
+    --secondary-900: #14532d;
     
     /* Neutral Colors */
     --gray-50: #f9fafb;

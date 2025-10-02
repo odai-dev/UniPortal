@@ -15,25 +15,25 @@ try {
     $stmt = $pdo->prepare("
         SELECT cm.*, c.id as course_id
         FROM course_materials cm
-        JOIN courses c ON cm.course_id = c.id
+        JOIN classes c ON cm.course_id = c.id
         WHERE cm.id = ?
     ");
     $stmt->execute([$material_id]);
     $material = $stmt->fetch();
     
     if (!$material) {
-        $_SESSION['download_error'] = 'Material not found.';
+        $_SESSION['download_error'] = 'Resource not found.';
         header('Location: materials.php');
         exit();
     }
     
     if (!isAdmin()) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ? AND course_id = ?");
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM memberships WHERE user_id = ? AND class_id = ?");
         $stmt->execute([$_SESSION['user_id'], $material['course_id']]);
-        $is_enrolled = $stmt->fetchColumn() > 0;
+        $is_registered = $stmt->fetchColumn() > 0;
         
-        if (!$is_enrolled) {
-            $_SESSION['download_error'] = 'You must be enrolled in the course to download materials.';
+        if (!$is_registered) {
+            $_SESSION['download_error'] = 'You must be registered for the class to download resources.';
             header('Location: materials.php');
             exit();
         }

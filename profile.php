@@ -124,7 +124,7 @@ try {
 
                         <?php if (isset($user['created_at'])): ?>
                         <div class="mb-3">
-                            <label for="member_since" class="form-label">Member Since</label>
+                            <label for="member_since" class="form-label">Registered Since</label>
                             <input type="text" class="form-control" id="member_since" 
                                    value="<?= date('F j, Y', strtotime($user['created_at'])) ?>" disabled>
                         </div>

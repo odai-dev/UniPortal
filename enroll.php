@@ -15,48 +15,48 @@ if (!isLoggedIn()) {
     exit();
 }
 
-// Only students can enroll
+// Only members can register
 if (isAdmin()) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Admin users cannot enroll in courses']);
+    echo json_encode(['success' => false, 'message' => 'Admin users cannot register for classes']);
     exit();
 }
 
-$course_id = $_POST['course_id'] ?? null;
+$class_id = $_POST['course_id'] ?? null;
 
-if (!$course_id || !is_numeric($course_id)) {
-    echo json_encode(['success' => false, 'message' => 'Invalid course ID']);
+if (!$class_id || !is_numeric($class_id)) {
+    echo json_encode(['success' => false, 'message' => 'Invalid class ID']);
     exit();
 }
 
 try {
-    // Check if course exists
-    $stmt = $pdo->prepare("SELECT id, course_name FROM courses WHERE id = ?");
-    $stmt->execute([$course_id]);
-    $course = $stmt->fetch();
+    // Check if class exists
+    $stmt = $pdo->prepare("SELECT id, class_name FROM classes WHERE id = ?");
+    $stmt->execute([$class_id]);
+    $class = $stmt->fetch();
     
-    if (!$course) {
-        echo json_encode(['success' => false, 'message' => 'Course not found']);
+    if (!$class) {
+        echo json_encode(['success' => false, 'message' => 'Class not found']);
         exit();
     }
     
-    // Check if already enrolled
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ? AND course_id = ?");
-    $stmt->execute([$_SESSION['user_id'], $course_id]);
-    $already_enrolled = $stmt->fetchColumn() > 0;
+    // Check if already registered
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM memberships WHERE user_id = ? AND class_id = ?");
+    $stmt->execute([$_SESSION['user_id'], $class_id]);
+    $already_registered = $stmt->fetchColumn() > 0;
     
-    if ($already_enrolled) {
-        echo json_encode(['success' => false, 'message' => 'You are already enrolled in this course']);
+    if ($already_registered) {
+        echo json_encode(['success' => false, 'message' => 'You are already registered for this class']);
         exit();
     }
     
-    // Enroll student
-    $stmt = $pdo->prepare("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)");
-    $stmt->execute([$_SESSION['user_id'], $course_id]);
+    // Register member
+    $stmt = $pdo->prepare("INSERT INTO memberships (user_id, class_id) VALUES (?, ?)");
+    $stmt->execute([$_SESSION['user_id'], $class_id]);
     
     echo json_encode([
         'success' => true, 
-        'message' => 'Successfully enrolled in ' . $course['course_name']
+        'message' => 'Successfully registered for ' . $class['class_name']
     ]);
     
 } catch (PDOException $e) {

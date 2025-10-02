@@ -129,9 +129,9 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
                     <i class="fas fa-sun" id="theme-icon"></i>
                 </button>
             </div>
-            <i class="fas fa-graduation-cap fa-3x mb-3"></i>
+            <i class="fas fa-dumbbell fa-3x mb-3"></i>
             <h3><?= SITE_NAME ?></h3>
-            <p class="mb-0">Student Login Portal</p>
+            <p class="mb-0">Member Login Portal</p>
         </div>
         
         <div class="auth-body">

@@ -32,7 +32,7 @@ require_once 'db.php';
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="dashboard.php">
-            <i class="fas fa-graduation-cap me-2"></i>
+            <i class="fas fa-dumbbell me-2"></i>
             <?= SITE_NAME ?>
         </a>
         
@@ -49,17 +49,17 @@ require_once 'db.php';
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="courses.php">
-                        <i class="fas fa-book me-1"></i>Courses
+                        <i class="fas fa-dumbbell me-1"></i>Classes
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="materials.php">
-                        <i class="fas fa-folder-open me-1"></i>Materials
+                        <i class="fas fa-folder-open me-1"></i>Resources
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="grades.php">
-                        <i class="fas fa-chart-line me-1"></i>Grades
+                        <i class="fas fa-chart-line me-1"></i>Progress
                     </a>
                 </li>
                 <li class="nav-item">
@@ -80,10 +80,10 @@ require_once 'db.php';
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="admin_students.php">
-                            <i class="fas fa-users me-1"></i>Manage Students
+                            <i class="fas fa-users me-1"></i>Manage Members
                         </a></li>
                         <li><a class="dropdown-item" href="admin_courses.php">
-                            <i class="fas fa-book-open me-1"></i>Manage Courses
+                            <i class="fas fa-calendar-alt me-1"></i>Manage Classes
                         </a></li>
                     </ul>
                 </li>

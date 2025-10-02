@@ -4,7 +4,7 @@ session_start();
 
 $host = $_ENV['PGHOST'] ?? $_ENV['DB_HOST'] ?? 'localhost';
 $port = $_ENV['PGPORT'] ?? $_ENV['DB_PORT'] ?? 3306;
-$dbname = $_ENV['PGDATABASE'] ?? $_ENV['DB_NAME'] ?? 'university_portal';
+$dbname = $_ENV['PGDATABASE'] ?? $_ENV['DB_NAME'] ?? 'fitness_center';
 $username = $_ENV['PGUSER'] ?? $_ENV['DB_USER'] ?? 'root';
 $password = $_ENV['PGPASSWORD'] ?? $_ENV['DB_PASS'] ?? '';
 

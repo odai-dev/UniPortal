@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Manage Courses';
+$page_title = 'Manage Classes';
 require_once 'config.php';
 require_once 'db.php';
 
@@ -10,7 +10,7 @@ require_once 'header.php';
 
 $success_message = '';
 $error_message = '';
-$selected_course = null;
+$selected_class = null;
 
 // Handle form submissions
 if ($_POST) {
@@ -22,141 +22,141 @@ if ($_POST) {
         $action = $_POST['action'] ?? '';
     
     if ($action === 'delete_course') {
-        $course_id = $_POST['course_id'] ?? '';
-        if (is_numeric($course_id)) {
+        $class_id = $_POST['course_id'] ?? '';
+        if (is_numeric($class_id)) {
             try {
-                // Delete course and all related data (cascading deletes)
-                $stmt = $pdo->prepare("DELETE FROM courses WHERE id = ?");
-                $stmt->execute([$course_id]);
-                $success_message = 'Course deleted successfully.';
+                // Delete class and all related data (cascading deletes)
+                $stmt = $pdo->prepare("DELETE FROM classes WHERE id = ?");
+                $stmt->execute([$class_id]);
+                $success_message = 'Class deleted successfully.';
             } catch (PDOException $e) {
-                $error_message = 'Error deleting course. Please try again.';
+                $error_message = 'Error deleting class. Please try again.';
             }
         }
     } elseif ($action === 'edit_course') {
-        $course_id = $_POST['course_id'] ?? '';
-        $course_code = sanitizeInput($_POST['course_code'] ?? '');
-        $course_name = sanitizeInput($_POST['course_name'] ?? '');
-        $instructor = sanitizeInput($_POST['instructor'] ?? '');
+        $class_id = $_POST['course_id'] ?? '';
+        $class_code = sanitizeInput($_POST['course_code'] ?? '');
+        $class_name = sanitizeInput($_POST['course_name'] ?? '');
+        $trainer = sanitizeInput($_POST['instructor'] ?? '');
         $description = sanitizeInput($_POST['description'] ?? '');
         
-        if (is_numeric($course_id) && !empty($course_code) && !empty($course_name) && !empty($instructor)) {
+        if (is_numeric($class_id) && !empty($class_code) && !empty($class_name) && !empty($trainer)) {
             try {
-                $stmt = $pdo->prepare("UPDATE courses SET course_code = ?, course_name = ?, instructor = ?, description = ? WHERE id = ?");
-                $stmt->execute([$course_code, $course_name, $instructor, $description, $course_id]);
-                $success_message = 'Course updated successfully.';
+                $stmt = $pdo->prepare("UPDATE classes SET class_code = ?, class_name = ?, trainer = ?, description = ? WHERE id = ?");
+                $stmt->execute([$class_code, $class_name, $trainer, $description, $class_id]);
+                $success_message = 'Class updated successfully.';
             } catch (PDOException $e) {
                 if (strpos($e->getMessage(), 'UNIQUE constraint') !== false) {
-                    $error_message = 'Course code is already in use.';
+                    $error_message = 'Class code is already in use.';
                 } else {
-                    $error_message = 'Error updating course. Please try again.';
+                    $error_message = 'Error updating class. Please try again.';
                 }
             }
         } else {
-            $error_message = 'Course code, name, and instructor are required.';
+            $error_message = 'Class code, name, and trainer are required.';
         }
     } elseif ($action === 'add_course') {
-        $course_code = sanitizeInput($_POST['course_code'] ?? '');
-        $course_name = sanitizeInput($_POST['course_name'] ?? '');
-        $instructor = sanitizeInput($_POST['instructor'] ?? '');
+        $class_code = sanitizeInput($_POST['course_code'] ?? '');
+        $class_name = sanitizeInput($_POST['course_name'] ?? '');
+        $trainer = sanitizeInput($_POST['instructor'] ?? '');
         $description = sanitizeInput($_POST['description'] ?? '');
         
-        if (!empty($course_code) && !empty($course_name) && !empty($instructor)) {
+        if (!empty($class_code) && !empty($class_name) && !empty($trainer)) {
             try {
-                $stmt = $pdo->prepare("INSERT INTO courses (course_code, course_name, instructor, description) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$course_code, $course_name, $instructor, $description]);
-                $success_message = 'Course added successfully.';
+                $stmt = $pdo->prepare("INSERT INTO classes (class_code, class_name, trainer, description) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$class_code, $class_name, $trainer, $description]);
+                $success_message = 'Class added successfully.';
             } catch (PDOException $e) {
                 if (strpos($e->getMessage(), 'UNIQUE constraint') !== false) {
-                    $error_message = 'Course code is already in use.';
+                    $error_message = 'Class code is already in use.';
                 } else {
-                    $error_message = 'Error adding course. Please try again.';
+                    $error_message = 'Error adding class. Please try again.';
                 }
             }
         } else {
-            $error_message = 'Course code, name, and instructor are required.';
+            $error_message = 'Class code, name, and trainer are required.';
         }
     } elseif ($action === 'assign_grade') {
-        $student_email = sanitizeInput($_POST['student_email'] ?? '');
-        $course_id = $_POST['course_id'] ?? '';
-        $grade = sanitizeInput($_POST['grade'] ?? '');
-        $grade_points = $_POST['grade_points'] ?? '';
+        $member_email = sanitizeInput($_POST['student_email'] ?? '');
+        $class_id = $_POST['course_id'] ?? '';
+        $performance_score = sanitizeInput($_POST['grade'] ?? '');
+        $score_points = $_POST['grade_points'] ?? '';
         
-        if (!empty($student_email) && is_numeric($course_id) && !empty($grade)) {
+        if (!empty($member_email) && is_numeric($class_id) && !empty($performance_score)) {
             try {
-                // Get student ID by email
-                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND role = 'student'");
-                $stmt->execute([$student_email]);
-                $student = $stmt->fetch();
+                // Get member ID by email
+                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND role = 'member'");
+                $stmt->execute([$member_email]);
+                $member = $stmt->fetch();
                 
-                if (!$student) {
-                    $error_message = 'Student not found.';
+                if (!$member) {
+                    $error_message = 'Member not found.';
                 } else {
-                    // Check if student is enrolled in the course
-                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ? AND course_id = ?");
-                    $stmt->execute([$student['id'], $course_id]);
-                    $is_enrolled = $stmt->fetchColumn() > 0;
+                    // Check if member is registered in the class
+                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM memberships WHERE user_id = ? AND class_id = ?");
+                    $stmt->execute([$member['id'], $class_id]);
+                    $is_registered = $stmt->fetchColumn() > 0;
                     
-                    if (!$is_enrolled) {
-                        $error_message = 'Student is not enrolled in this course.';
+                    if (!$is_registered) {
+                        $error_message = 'Member is not registered for this class.';
                     } else {
-                        // Insert or update grade (database agnostic)
+                        // Insert or update progress (database agnostic)
                         try {
                             // Try insert first
-                            $stmt = $pdo->prepare("INSERT INTO grades (user_id, course_id, grade, grade_points) VALUES (?, ?, ?, ?)");
-                            $stmt->execute([$student['id'], $course_id, $grade, $grade_points]);
+                            $stmt = $pdo->prepare("INSERT INTO progress (user_id, class_id, performance_score, score_points) VALUES (?, ?, ?, ?)");
+                            $stmt->execute([$member['id'], $class_id, $performance_score, $score_points]);
                         } catch (PDOException $insert_e) {
                             // If insert fails due to duplicate, try update
-                            $stmt = $pdo->prepare("UPDATE grades SET grade = ?, grade_points = ? WHERE user_id = ? AND course_id = ?");
-                            $stmt->execute([$grade, $grade_points, $student['id'], $course_id]);
+                            $stmt = $pdo->prepare("UPDATE progress SET performance_score = ?, score_points = ? WHERE user_id = ? AND class_id = ?");
+                            $stmt->execute([$performance_score, $score_points, $member['id'], $class_id]);
                         }
-                        $success_message = 'Grade assigned successfully.';
+                        $success_message = 'Progress assigned successfully.';
                     }
                 }
             } catch (PDOException $e) {
-                $error_message = 'Error assigning grade. Please try again.';
+                $error_message = 'Error assigning progress. Please try again.';
             }
         } else {
-            $error_message = 'All grade fields are required.';
+            $error_message = 'All progress fields are required.';
         }
     }
     }
 }
 
-// Get course for editing
+// Get class for editing
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM courses WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT * FROM classes WHERE id = ?");
         $stmt->execute([$_GET['edit']]);
-        $selected_course = $stmt->fetch();
+        $selected_class = $stmt->fetch();
     } catch (PDOException $e) {
-        $error_message = 'Error loading course data.';
+        $error_message = 'Error loading class data.';
     }
 }
 
-// Get all courses with their statistics
+// Get all classes with their statistics
 try {
     $stmt = $pdo->prepare("
         SELECT c.*, 
-               COUNT(DISTINCT e.user_id) as enrolled_students,
-               COUNT(DISTINCT g.user_id) as graded_students
-        FROM courses c
-        LEFT JOIN enrollments e ON c.id = e.course_id
-        LEFT JOIN grades g ON c.id = g.course_id
-        GROUP BY c.id, c.course_code, c.course_name, c.instructor, c.description, c.created_at
-        ORDER BY c.course_code
+               COUNT(DISTINCT m.user_id) as registered_members,
+               COUNT(DISTINCT p.user_id) as tracked_members
+        FROM classes c
+        LEFT JOIN memberships m ON c.id = m.class_id
+        LEFT JOIN progress p ON c.id = p.class_id
+        GROUP BY c.id, c.class_code, c.class_name, c.trainer, c.description, c.created_at
+        ORDER BY c.class_code
     ");
     $stmt->execute();
-    $courses = $stmt->fetchAll();
+    $classes = $stmt->fetchAll();
 } catch (PDOException $e) {
-    $error_message = 'Database error occurred while loading courses.';
+    $error_message = 'Database error occurred while loading classes.';
 }
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-book-open me-2"></i>Manage Courses</h1>
+    <h1><i class="fas fa-dumbbell me-2"></i>Manage Fitness Classes</h1>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
-        <i class="fas fa-plus me-1"></i>Add New Course
+        <i class="fas fa-plus me-1"></i>Add New Class
     </button>
 </div>
 
@@ -176,65 +176,65 @@ try {
     </div>
 <?php endif; ?>
 
-<!-- Courses Table -->
-<?php if (!empty($courses)): ?>
+<!-- Classes Table -->
+<?php if (!empty($classes)): ?>
 <div class="card">
     <div class="card-header">
-        <h5><i class="fas fa-list me-2"></i>Courses List</h5>
+        <h5><i class="fas fa-list me-2"></i>Classes List</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-hover datatable">
                 <thead>
                     <tr>
-                        <th>Course Code</th>
-                        <th>Course Name</th>
-                        <th>Instructor</th>
-                        <th>Enrolled Students</th>
-                        <th>Graded Students</th>
+                        <th>Class Code</th>
+                        <th>Class Name</th>
+                        <th>Trainer</th>
+                        <th>Registered Members</th>
+                        <th>Tracked Progress</th>
                         <th>Created</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($courses as $course): ?>
+                    <?php foreach ($classes as $class): ?>
                         <tr>
                             <td>
-                                <strong><?= sanitizeInput($course['course_code']) ?></strong>
+                                <strong><?= sanitizeInput($class['class_code']) ?></strong>
                             </td>
-                            <td><?= sanitizeInput($course['course_name']) ?></td>
+                            <td><?= sanitizeInput($class['class_name']) ?></td>
                             <td>
                                 <i class="fas fa-user-tie me-1"></i>
-                                <?= sanitizeInput($course['instructor']) ?>
+                                <?= sanitizeInput($class['trainer']) ?>
                             </td>
                             <td>
-                                <span class="badge bg-primary"><?= $course['enrolled_students'] ?></span>
+                                <span class="badge bg-primary"><?= $class['registered_members'] ?></span>
                             </td>
                             <td>
-                                <span class="badge bg-success"><?= $course['graded_students'] ?></span>
+                                <span class="badge bg-success"><?= $class['tracked_members'] ?></span>
                             </td>
                             <td>
-                                <small><?= date('M j, Y', strtotime($course['created_at'])) ?></small>
+                                <small><?= date('M j, Y', strtotime($class['created_at'])) ?></small>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <a href="course.php?id=<?= $course['id'] ?>" 
+                                    <a href="course.php?id=<?= $class['id'] ?>" 
                                        class="btn btn-outline-info" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <button class="btn btn-outline-success" 
-                                            onclick="manageGrades(<?= $course['id'] ?>, '<?= sanitizeInput($course['course_name']) ?>')"
-                                            title="Manage Grades">
+                                            onclick="manageProgress(<?= $class['id'] ?>, '<?= sanitizeInput($class['class_name']) ?>')"
+                                            title="Manage Progress">
                                         <i class="fas fa-chart-line"></i>
                                     </button>
                                     <button class="btn btn-outline-primary" 
-                                            onclick="editCourse(<?= htmlspecialchars(json_encode($course), ENT_QUOTES, 'UTF-8') ?>)"
-                                            title="Edit Course">
+                                            onclick="editClass(<?= htmlspecialchars(json_encode($class), ENT_QUOTES, 'UTF-8') ?>)"
+                                            title="Edit Class">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn btn-outline-danger" 
-                                            onclick="deleteCourse(<?= $course['id'] ?>, '<?= sanitizeInput($course['course_name']) ?>')"
-                                            title="Delete Course">
+                                            onclick="deleteClass(<?= $class['id'] ?>, '<?= sanitizeInput($class['class_name']) ?>')"
+                                            title="Delete Class">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -248,21 +248,21 @@ try {
 </div>
 <?php else: ?>
 <div class="text-center py-5">
-    <i class="fas fa-book-open fa-5x text-muted mb-3"></i>
-    <h3 class="text-muted">No Courses Found</h3>
-    <p class="text-muted">There are no courses in the system.</p>
+    <i class="fas fa-dumbbell fa-5x text-muted mb-3"></i>
+    <h3 class="text-muted">No Classes Found</h3>
+    <p class="text-muted">There are no fitness classes in the system.</p>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
-        <i class="fas fa-plus me-1"></i>Add First Course
+        <i class="fas fa-plus me-1"></i>Add First Class
     </button>
 </div>
 <?php endif; ?>
 
-<!-- Add Course Modal -->
+<!-- Add Class Modal -->
 <div class="modal fade" id="addCourseModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add New Course</h5>
+                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add New Class</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="">
@@ -273,36 +273,36 @@ try {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="add_course_code" class="form-label">Course Code</label>
+                                <label for="add_course_code" class="form-label">Class Code</label>
                                 <input type="text" class="form-control" id="add_course_code" name="course_code" 
-                                       placeholder="e.g., CS101" required>
+                                       placeholder="e.g., YOGA101" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="add_instructor" class="form-label">Instructor</label>
+                                <label for="add_instructor" class="form-label">Trainer</label>
                                 <input type="text" class="form-control" id="add_instructor" name="instructor" 
-                                       placeholder="e.g., Dr. Smith" required>
+                                       placeholder="e.g., Coach Sarah" required>
                             </div>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="add_course_name" class="form-label">Course Name</label>
+                        <label for="add_course_name" class="form-label">Class Name</label>
                         <input type="text" class="form-control" id="add_course_name" name="course_name" 
-                               placeholder="e.g., Introduction to Computer Science" required>
+                               placeholder="e.g., Beginner Yoga & Flexibility" required>
                     </div>
                     
                     <div class="mb-3">
                         <label for="add_description" class="form-label">Description</label>
                         <textarea class="form-control" id="add_description" name="description" rows="4" 
-                                  placeholder="Course description and objectives"></textarea>
+                                  placeholder="Class description and fitness goals"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Add Course
+                        <i class="fas fa-plus me-1"></i>Add Class
                     </button>
                 </div>
             </form>
@@ -310,12 +310,12 @@ try {
     </div>
 </div>
 
-<!-- Edit Course Modal -->
+<!-- Edit Class Modal -->
 <div class="modal fade" id="editCourseModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Course</h5>
+                <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Class</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="">
@@ -327,20 +327,20 @@ try {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_course_code" class="form-label">Course Code</label>
+                                <label for="edit_course_code" class="form-label">Class Code</label>
                                 <input type="text" class="form-control" id="edit_course_code" name="course_code" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="edit_instructor" class="form-label">Instructor</label>
+                                <label for="edit_instructor" class="form-label">Trainer</label>
                                 <input type="text" class="form-control" id="edit_instructor" name="instructor" required>
                             </div>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="edit_course_name" class="form-label">Course Name</label>
+                        <label for="edit_course_name" class="form-label">Class Name</label>
                         <input type="text" class="form-control" id="edit_course_name" name="course_name" required>
                     </div>
                     
@@ -352,7 +352,7 @@ try {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i>Update Course
+                        <i class="fas fa-save me-1"></i>Update Class
                     </button>
                 </div>
             </form>
@@ -360,12 +360,12 @@ try {
     </div>
 </div>
 
-<!-- Grade Assignment Modal -->
+<!-- Progress Assignment Modal -->
 <div class="modal fade" id="gradeModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-chart-line me-2"></i>Assign Grade</h5>
+                <h5 class="modal-title"><i class="fas fa-chart-line me-2"></i>Assign Progress</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="">
@@ -375,41 +375,35 @@ try {
                     <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
                     
                     <div class="mb-3">
-                        <label class="form-label">Course</label>
+                        <label class="form-label">Class</label>
                         <input type="text" class="form-control" id="grade_course_name" disabled>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="student_email" class="form-label">Student Email</label>
+                        <label for="student_email" class="form-label">Member Email</label>
                         <input type="email" class="form-control" id="student_email" name="student_email" 
-                               placeholder="Enter student's email address" required>
+                               placeholder="Enter member's email address" required>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="grade" class="form-label">Grade</label>
+                                <label for="grade" class="form-label">Performance</label>
                                 <select class="form-select" id="grade" name="grade" required>
-                                    <option value="">Select Grade</option>
-                                    <option value="A+">A+</option>
-                                    <option value="A">A</option>
-                                    <option value="A-">A-</option>
-                                    <option value="B+">B+</option>
-                                    <option value="B">B</option>
-                                    <option value="B-">B-</option>
-                                    <option value="C+">C+</option>
-                                    <option value="C">C</option>
-                                    <option value="C-">C-</option>
-                                    <option value="D">D</option>
-                                    <option value="F">F</option>
+                                    <option value="">Select Performance</option>
+                                    <option value="Excellent">Excellent</option>
+                                    <option value="Very Good">Very Good</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Needs Improvement">Needs Improvement</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="grade_points" class="form-label">Grade Points</label>
+                                <label for="grade_points" class="form-label">Score Points</label>
                                 <input type="number" class="form-control" id="grade_points" name="grade_points" 
-                                       min="0" max="4" step="0.1" placeholder="0.0 - 4.0">
+                                       min="0" max="100" step="1" placeholder="0 - 100">
                             </div>
                         </div>
                     </div>
@@ -417,7 +411,7 @@ try {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-1"></i>Assign Grade
+                        <i class="fas fa-save me-1"></i>Assign Progress
                     </button>
                 </div>
             </form>
@@ -425,7 +419,7 @@ try {
     </div>
 </div>
 
-<!-- Delete Course Modal -->
+<!-- Delete Class Modal -->
 <div class="modal fade" id="deleteCourseModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -434,9 +428,9 @@ try {
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this course?</p>
+                <p>Are you sure you want to delete this class?</p>
                 <p><strong id="delete_course_name"></strong></p>
-                <p class="text-danger"><i class="fas fa-warning me-1"></i>This action cannot be undone. All enrollments and grades for this course will be permanently deleted.</p>
+                <p class="text-danger"><i class="fas fa-warning me-1"></i>This action cannot be undone. All memberships and progress for this class will be permanently deleted.</p>
             </div>
             <div class="modal-footer">
                 <form method="POST" action="">
@@ -445,7 +439,7 @@ try {
                     <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-1"></i>Delete Course
+                        <i class="fas fa-trash me-1"></i>Delete Class
                     </button>
                 </form>
             </div>
@@ -454,26 +448,26 @@ try {
 </div>
 
 <script>
-function editCourse(course) {
-    document.getElementById('edit_course_id').value = course.id;
-    document.getElementById('edit_course_code').value = course.course_code;
-    document.getElementById('edit_course_name').value = course.course_name;
-    document.getElementById('edit_instructor').value = course.instructor;
-    document.getElementById('edit_description').value = course.description || '';
+function editClass(classData) {
+    document.getElementById('edit_course_id').value = classData.id;
+    document.getElementById('edit_course_code').value = classData.class_code;
+    document.getElementById('edit_course_name').value = classData.class_name;
+    document.getElementById('edit_instructor').value = classData.trainer;
+    document.getElementById('edit_description').value = classData.description || '';
     
     new bootstrap.Modal(document.getElementById('editCourseModal')).show();
 }
 
-function deleteCourse(courseId, courseName) {
-    document.getElementById('delete_course_id').value = courseId;
-    document.getElementById('delete_course_name').textContent = courseName;
+function deleteClass(classId, className) {
+    document.getElementById('delete_course_id').value = classId;
+    document.getElementById('delete_course_name').textContent = className;
     
     new bootstrap.Modal(document.getElementById('deleteCourseModal')).show();
 }
 
-function manageGrades(courseId, courseName) {
-    document.getElementById('grade_course_id').value = courseId;
-    document.getElementById('grade_course_name').value = courseName;
+function manageProgress(classId, className) {
+    document.getElementById('grade_course_id').value = classId;
+    document.getElementById('grade_course_name').value = className;
     document.getElementById('student_email').value = '';
     document.getElementById('grade').value = '';
     document.getElementById('grade_points').value = '';
@@ -481,16 +475,17 @@ function manageGrades(courseId, courseName) {
     new bootstrap.Modal(document.getElementById('gradeModal')).show();
 }
 
-// Auto-fill grade points based on selected grade
+// Auto-fill score points based on selected performance
 document.getElementById('grade').addEventListener('change', function() {
-    const gradePoints = {
-        'A+': '4.0', 'A': '4.0', 'A-': '3.7',
-        'B+': '3.3', 'B': '3.0', 'B-': '2.7',
-        'C+': '2.3', 'C': '2.0', 'C-': '1.7',
-        'D': '1.0', 'F': '0.0'
+    const scorePoints = {
+        'Excellent': '95',
+        'Very Good': '85',
+        'Good': '75',
+        'Average': '65',
+        'Needs Improvement': '50'
     };
     
-    document.getElementById('grade_points').value = gradePoints[this.value] || '';
+    document.getElementById('grade_points').value = scorePoints[this.value] || '';
 });
 </script>
 

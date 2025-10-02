@@ -41,45 +41,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $products = [
     [
         'id' => 1,
-        'name' => 'Laptop Pro 15"',
-        'description' => 'High-performance laptop with 16GB RAM and 512GB SSD',
-        'price' => 1299.99,
-        'image' => '💻'
+        'name' => 'Premium Whey Protein',
+        'description' => 'High-quality whey protein isolate - 5lb tub, 25g protein per serving',
+        'price' => 59.99,
+        'image' => '🥤'
     ],
     [
         'id' => 2,
-        'name' => 'Wireless Mouse',
-        'description' => 'Ergonomic wireless mouse with precision tracking',
-        'price' => 29.99,
-        'image' => '🖱️'
+        'name' => 'Yoga Mat Pro',
+        'description' => 'Extra-thick non-slip yoga mat with carrying strap',
+        'price' => 34.99,
+        'image' => '🧘'
     ],
     [
         'id' => 3,
-        'name' => 'Mechanical Keyboard',
-        'description' => 'RGB backlit mechanical keyboard with blue switches',
-        'price' => 89.99,
-        'image' => '⌨️'
+        'name' => 'Resistance Bands Set',
+        'description' => '5-piece resistance bands with different strength levels',
+        'price' => 24.99,
+        'image' => '💪'
     ],
     [
         'id' => 4,
-        'name' => 'USB-C Hub',
-        'description' => '7-in-1 USB-C hub with HDMI and SD card reader',
-        'price' => 45.99,
-        'image' => '🔌'
+        'name' => 'Fitness Tracker Watch',
+        'description' => 'Smart fitness watch with heart rate monitor and GPS',
+        'price' => 89.99,
+        'image' => '⌚'
     ],
     [
         'id' => 5,
-        'name' => 'Webcam HD',
-        'description' => '1080p HD webcam with built-in microphone',
-        'price' => 69.99,
-        'image' => '📷'
+        'name' => 'Gym Water Bottle',
+        'description' => '32oz insulated stainless steel water bottle',
+        'price' => 19.99,
+        'image' => '💧'
     ],
     [
         'id' => 6,
-        'name' => 'Headphones Pro',
-        'description' => 'Noise-cancelling over-ear headphones',
-        'price' => 199.99,
-        'image' => '🎧'
+        'name' => 'Workout Gloves',
+        'description' => 'Premium weightlifting gloves with wrist support',
+        'price' => 16.99,
+        'image' => '🧤'
     ]
 ];
 
@@ -101,7 +101,7 @@ foreach ($_SESSION['cart'] as $product_id => $quantity) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Store - Hidden Page</title>
+    <title>Fitness Store - Supplements & Gear</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -211,8 +211,8 @@ foreach ($_SESSION['cart'] as $product_id => $quantity) {
     <div class="store-header">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1><i class="fas fa-store me-2"></i>Tech Store</h1>
-                <p class="text-muted mb-0">Hidden store page - Premium tech accessories</p>
+                <h1><i class="fas fa-store me-2"></i>Fitness Store</h1>
+                <p class="text-muted mb-0">Premium supplements & workout gear</p>
             </div>
             <div>
                 <span class="badge-cart">
@@ -315,7 +315,7 @@ foreach ($_SESSION['cart'] as $product_id => $quantity) {
 
 <script>
 function checkout() {
-    alert('🎉 Checkout successful!\n\nTotal: $<?= number_format($cart_total, 2) ?>\n\nThank you for your purchase!\n\nThis is a demo store.');
+    alert('🎉 Checkout successful!\n\nTotal: $<?= number_format($cart_total, 2) ?>\n\nThank you for your purchase!\n\nYour fitness journey starts now!\n\nThis is a demo store.');
     <?php $_SESSION['cart'] = []; ?>
     location.reload();
 }

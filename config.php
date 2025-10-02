@@ -1,5 +1,5 @@
 <?php
-define('SITE_NAME', 'University Student Portal');
+define('SITE_NAME', 'FitZone Fitness Center');
 $domain = $_ENV['REPLIT_DEV_DOMAIN'] ?? 'localhost:5000';
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'https';
 define('SITE_URL', $protocol . '://' . $domain);

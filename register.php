@@ -51,7 +51,7 @@ if ($_POST) {
                 // Hash password and insert user
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 
-                $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'student')");
+                $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'member')");
                 $stmt->execute([$name, $email, $hashed_password]);
                 
                 // Get the new user ID
@@ -66,7 +66,7 @@ if ($_POST) {
                     $_SESSION['user_id'] = $user_id;
                     $_SESSION['name'] = $name;
                     $_SESSION['email'] = $email;
-                    $_SESSION['role'] = 'student';
+                    $_SESSION['role'] = 'member';
                     
                     $token = generateRememberToken($user_id);
                     if ($token) {

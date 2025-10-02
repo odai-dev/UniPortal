@@ -15,25 +15,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
-    $course_id = $_POST['course_id'] ?? null;
+    $class_id = $_POST['course_id'] ?? null;
     $title = sanitizeInput($_POST['title'] ?? '');
     $description = sanitizeInput($_POST['description'] ?? '');
     
-    if (!$course_id || !is_numeric($course_id)) {
-        $_SESSION['upload_error'] = 'Invalid course selection.';
+    if (!$class_id || !is_numeric($class_id)) {
+        $_SESSION['upload_error'] = 'Invalid class selection.';
         header('Location: materials.php');
         exit();
     }
     
     if (empty($title)) {
         $_SESSION['upload_error'] = 'Title is required.';
-        header('Location: materials.php?course_id=' . $course_id);
+        header('Location: materials.php?course_id=' . $class_id);
         exit();
     }
     
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $_SESSION['upload_error'] = 'Please select a file to upload.';
-        header('Location: materials.php?course_id=' . $course_id);
+        header('Location: materials.php?course_id=' . $class_id);
         exit();
     }
     
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $max_size = 10 * 1024 * 1024;
     if ($file_size > $max_size) {
         $_SESSION['upload_error'] = 'File size exceeds 10MB limit.';
-        header('Location: materials.php?course_id=' . $course_id);
+        header('Location: materials.php?course_id=' . $class_id);
         exit();
     }
     
@@ -67,17 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (!isset($allowed_types[$file_ext])) {
         $_SESSION['upload_error'] = 'File type not allowed. Allowed types: PDF, Word, PowerPoint, Excel, Text, ZIP, RAR.';
-        header('Location: materials.php?course_id=' . $course_id);
+        header('Location: materials.php?course_id=' . $class_id);
         exit();
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT id FROM courses WHERE id = ?");
-        $stmt->execute([$course_id]);
-        $course = $stmt->fetch();
+        $stmt = $pdo->prepare("SELECT id FROM classes WHERE id = ?");
+        $stmt->execute([$class_id]);
+        $class = $stmt->fetch();
         
-        if (!$course) {
-            $_SESSION['upload_error'] = 'Course not found.';
+        if (!$class) {
+            $_SESSION['upload_error'] = 'Class not found.';
             header('Location: materials.php');
             exit();
         }
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!in_array($file_type, $allowed_types[$file_ext])) {
                 unlink($upload_path);
                 $_SESSION['upload_error'] = 'File type mismatch. The file content does not match its extension.';
-                header('Location: materials.php?course_id=' . $course_id);
+                header('Location: materials.php?course_id=' . $class_id);
                 exit();
             }
             
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
-                $course_id,
+                $class_id,
                 $title,
                 $description,
                 $file_name,
@@ -116,19 +116,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id']
             ]);
             
-            $_SESSION['upload_success'] = 'Material uploaded successfully!';
-            header('Location: materials.php?course_id=' . $course_id);
+            $_SESSION['upload_success'] = 'Resource uploaded successfully!';
+            header('Location: materials.php?course_id=' . $class_id);
             exit();
         } else {
             $_SESSION['upload_error'] = 'Failed to upload file. Please try again.';
-            header('Location: materials.php?course_id=' . $course_id);
+            header('Location: materials.php?course_id=' . $class_id);
             exit();
         }
         
     } catch (PDOException $e) {
         error_log('Upload material error: ' . $e->getMessage());
         $_SESSION['upload_error'] = 'Database error occurred. Please try again.';
-        header('Location: materials.php?course_id=' . $course_id);
+        header('Location: materials.php?course_id=' . $class_id);
         exit();
     }
 } else {

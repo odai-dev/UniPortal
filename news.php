@@ -19,7 +19,7 @@ try {
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-bullhorn me-2"></i>University Announcements</h1>
+    <h1><i class="fas fa-bullhorn me-2"></i>Gym Announcements</h1>
     <?php if (isAdmin()): ?>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAnnouncementModal">
             <i class="fas fa-plus me-1"></i>Add Announcement
@@ -108,7 +108,7 @@ try {
                 </div>
                 <div class="col-md-3">
                     <h4 class="text-info"><?= date('Y') ?></h4>
-                    <p class="text-muted">Academic Year</p>
+                    <p class="text-muted">Current Year</p>
                 </div>
             </div>
         </div>
