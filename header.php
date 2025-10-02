@@ -1,6 +1,9 @@
 <?php
 require_once 'config.php';
 require_once 'db.php';
+
+// Get current page for active state
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,97 +28,148 @@ require_once 'db.php';
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-<div class="page-transition">
 
 <?php if (isLoggedIn()): ?>
-<!-- Navigation for logged in users -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="dashboard.php">
-            <i class="fas fa-dumbbell me-2"></i>
-            <?= SITE_NAME ?>
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard.php">
-                        <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="courses.php">
-                        <i class="fas fa-dumbbell me-1"></i>Classes
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="materials.php">
-                        <i class="fas fa-folder-open me-1"></i>Resources
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="grades.php">
-                        <i class="fas fa-chart-line me-1"></i>Progress
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="news.php">
-                        <i class="fas fa-bullhorn me-1"></i>Announcements
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.php">
-                        <i class="fas fa-envelope me-1"></i>Contact
-                    </a>
-                </li>
+    <!-- App Layout with Sidebar -->
+    <div class="app-layout">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <a href="dashboard.php" class="sidebar-logo">
+                    <i class="fas fa-dumbbell"></i>
+                    <div class="logo-text">
+                        <span class="logo-title">FitZone</span>
+                        <span class="logo-subtitle">Fitness Center</span>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main Menu</div>
+                    
+                    <div class="nav-item">
+                        <a href="dashboard.php" class="nav-link <?= $current_page == 'dashboard.php' ? 'active' : '' ?>">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="courses.php" class="nav-link <?= $current_page == 'courses.php' ? 'active' : '' ?>">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Classes</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="materials.php" class="nav-link <?= $current_page == 'materials.php' ? 'active' : '' ?>">
+                            <i class="fas fa-folder-open"></i>
+                            <span>Resources</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="grades.php" class="nav-link <?= $current_page == 'grades.php' ? 'active' : '' ?>">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Progress</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="news.php" class="nav-link <?= $current_page == 'news.php' ? 'active' : '' ?>">
+                            <i class="fas fa-bullhorn"></i>
+                            <span>Announcements</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="contact.php" class="nav-link <?= $current_page == 'contact.php' ? 'active' : '' ?>">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact</span>
+                        </a>
+                    </div>
+                </div>
                 
                 <?php if (isAdmin()): ?>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-cog me-1"></i>Admin
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="admin_students.php">
-                            <i class="fas fa-users me-1"></i>Manage Members
-                        </a></li>
-                        <li><a class="dropdown-item" href="admin_courses.php">
-                            <i class="fas fa-calendar-alt me-1"></i>Manage Classes
-                        </a></li>
-                    </ul>
-                </li>
+                <div class="nav-section">
+                    <div class="nav-section-title">Admin</div>
+                    
+                    <div class="nav-item">
+                        <a href="admin_students.php" class="nav-link <?= $current_page == 'admin_students.php' ? 'active' : '' ?>">
+                            <i class="fas fa-users"></i>
+                            <span>Manage Members</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="admin_courses.php" class="nav-link <?= $current_page == 'admin_courses.php' ? 'active' : '' ?>">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Manage Classes</span>
+                        </a>
+                    </div>
+                </div>
                 <?php endif; ?>
-            </ul>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    
+                    <div class="nav-item">
+                        <a href="profile.php" class="nav-link <?= $current_page == 'profile.php' ? 'active' : '' ?>">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Profile</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="logout.php" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
             
-            <ul class="navbar-nav">
-                <li class="nav-item me-2">
+            <!-- Sidebar Footer - User Profile -->
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name"><?= sanitizeInput($_SESSION['name'] ?? 'User') ?></div>
+                        <div class="user-role"><?= isAdmin() ? 'Admin' : 'Member' ?></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1><?= isset($page_title) ? $page_title : 'Dashboard' ?></h1>
+                </div>
+                <div class="topbar-right">
                     <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle" title="Toggle theme">
                         <i class="fas fa-sun" id="theme-icon"></i>
                         <span id="theme-text">Light</span>
                     </button>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user me-1"></i>
-                        <?= sanitizeInput($_SESSION['name'] ?? 'User') ?>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.php">
-                            <i class="fas fa-user-edit me-1"></i>Profile
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="logout.php">
-                            <i class="fas fa-sign-out-alt me-1"></i>Logout
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+                </div>
+            </div>
+            
+            <!-- Page Content -->
+            <div class="content-container page-transition">
+<?php else: ?>
+    <!-- For non-logged-in users (auth pages) -->
+    <div class="page-transition">
 <?php endif; ?>
-
-<main class="<?= isLoggedIn() ? 'container mt-4' : '' ?>">

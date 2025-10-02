@@ -1,19 +1,8 @@
-</main>
-
-<?php if (isLoggedIn()): ?>
-<!-- Footer for logged in users -->
-<footer class="bg-white mt-5 py-3" style="background-color: var(--gray-100) !important; border-top: 1px solid var(--gray-200);">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p class="mb-0">&copy; <?= date('Y') ?> <?= SITE_NAME ?>. All rights reserved.</p>
-            </div>
-            <div class="col-md-6 text-end">
-                <small class="text-muted">Logged in as: <?= sanitizeInput($_SESSION['name'] ?? 'User') ?></small>
-            </div>
-        </div>
-    </div>
-</footer>
+            </div> <!-- Close content-container -->
+        </div> <!-- Close main-content -->
+    </div> <!-- Close app-layout -->
+<?php if (!isLoggedIn()): ?>
+    </div> <!-- Close page-transition for auth pages -->
 <?php endif; ?>
 
 <!-- Bootstrap 5 JS -->
@@ -46,6 +35,25 @@ $(document).ready(function() {
 setTimeout(function() {
     $('.alert').fadeOut('slow');
 }, 5000);
+
+// Mobile Menu Toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        sidebarOverlay.classList.toggle('active');
+    });
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+    });
+}
 
 // Theme Toggle Functionality
 function initTheme() {
@@ -107,6 +115,5 @@ if (document.readyState === 'loading') {
 }
 </script>
 
-</div> <!-- Close page-transition -->
 </body>
 </html>
