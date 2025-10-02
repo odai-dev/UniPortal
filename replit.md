@@ -58,7 +58,24 @@ The portal is built on a PHP 8.4 backend utilizing PDO for PostgreSQL database i
 - **jQuery 3.7.0**: JavaScript library for DOM manipulation and client-side scripting.
 - **DataTables**: jQuery plugin for enhancing HTML tables with advanced features like sorting, searching, and pagination.
 
+## Replit Environment Setup
+- **PHP Version**: PHP 8.4 with built-in development server
+- **Database**: PostgreSQL 17 (Replit-managed, Neon-backed)
+- **Server Configuration**: PHP built-in server running on 0.0.0.0:5000 with router.php
+- **File Uploads**: `/uploads` directory created with proper permissions
+- **Deployment**: Configured for autoscale deployment with PHP server
+- **Admin Credentials**: Email: admin@gmail.com, Password: password (default from original project)
+
 ## Recent Changes
+
+**October 2, 2025**: Replit Environment Setup
+- Installed PHP 8.4 module and configured development environment
+- Created PostgreSQL database and executed database.sql schema
+- Set up all tables with sample data (users, classes, memberships, progress, announcements, messages, remember_tokens, course_materials)
+- Created uploads directory for file storage
+- Configured PHP workflow to run on port 5000 with router.php security
+- Set up autoscale deployment configuration
+- Verified application functionality (registration, login, database connectivity)
 
 **October 2, 2025 (PM)**: Complete UI/UX Transformation - Modern Sidebar Layout
 - **Major Architectural Change**: Converted entire interface from top horizontal navbar to modern left sidebar navigation
