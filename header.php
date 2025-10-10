@@ -40,7 +40,7 @@ require_once 'db.php';
 <?php if (isLoggedIn()): ?>
 <!-- Navigation for logged in users -->
 <nav class="navbar navbar-expand-lg">
-    <div class="container">
+    <div class="container-fluid px-4">
         <a class="navbar-brand" href="dashboard.php">
             <i class="fas fa-graduation-cap me-2"></i>
             <?= SITE_NAME ?>
