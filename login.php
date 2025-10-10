@@ -135,7 +135,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
         <div class="auth-header">
             <i class="fas fa-graduation-cap fa-3x mb-3"></i>
             <h3><?= SITE_NAME ?></h3>
-            <p class="mb-0">Student Login Portal</p>
+            <p class="mb-0">بوابة الطلاب الذكية - Smart Student Portal</p>
         </div>
         
         <div class="auth-body">

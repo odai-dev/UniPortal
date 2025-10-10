@@ -1,7 +1,7 @@
-# University Student Portal
+# جامعة صنعاء - Sana'a University Student Portal
 
 ## Overview
-This project is a comprehensive University Student Portal, built with PHP 8.4, PDO, and PostgreSQL. It offers secure user authentication, role-based access for students and administrators, and features for course management, grade tracking, and communication. A unique, hidden tech store page is also included. The system prioritizes security through robust measures like password hashing, prepared statements, input validation, and CAPTCHA protection. The project aims to provide a secure and efficient platform for university operations, with potential for broader market application in educational institutions.
+This is a comprehensive Student Portal for Sana'a University (جامعة صنعاء) in Yemen, built with PHP 8.4, PDO, and PostgreSQL. The portal serves Yemeni students and faculty with bilingual Arabic/English support. It offers secure user authentication, role-based access for students and administrators, and features for course management, grade tracking, and communication. A unique, hidden tech store page is also included. The system prioritizes security through robust measures like password hashing, prepared statements, input validation, and CAPTCHA protection.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -33,6 +33,9 @@ The portal is built on a PHP 8.4 backend utilizing PDO for PostgreSQL database i
 
 **System Design Choices:**
 - **Database**: PostgreSQL 17 is the chosen database, managed via PDO for robust data interaction.
+- **Timezone**: Configured to Asia/Aden (Yemen timezone).
+- **Localization**: Bilingual support (Arabic/English) throughout the interface, with Yemeni context for courses, instructors, and announcements.
+- **Sample Data**: Features authentic Yemeni instructor names (Dr. Ahmed Al-Haddad, Prof. Khadija Al-Mahbashi, etc.), Yemeni student names, and courses relevant to Yemeni universities including "History of Yemen".
 - **API/Helper Files**: Dedicated files for CAPTCHA generation (`custom_captcha.php`), verification (`captcha_verify.php`), database connection (`db.php`), application configuration (`config.php`), and file management (`upload_material.php`, `download_material.php`, `delete_material.php`).
 - **Security Router**: `router.php` blocks direct HTTP access to uploaded files, ensuring materials are only accessible through authenticated download endpoints.
 
