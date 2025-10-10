@@ -123,12 +123,6 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
 <div class="auth-container page-transition">
     <div class="auth-card col-md-6 col-lg-4">
         <div class="auth-header">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <div></div>
-                <button class="btn btn-sm" onclick="toggleTheme()" id="theme-toggle" title="Toggle theme" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: var(--radius-md); padding: 0.4rem 0.8rem;">
-                    <i class="fas fa-sun" id="theme-icon"></i>
-                </button>
-            </div>
             <i class="fas fa-graduation-cap fa-3x mb-3"></i>
             <h3><?= SITE_NAME ?></h3>
             <p class="mb-0">Student Login Portal</p>
