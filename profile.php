@@ -73,7 +73,7 @@ try {
 ?>
 
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-12 col-lg-10 col-xl-8">
         <div class="profile-card">
             <div class="profile-header">
                 <div class="profile-avatar">

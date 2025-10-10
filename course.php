@@ -88,7 +88,7 @@ $page_title = isset($course) ? $course['course_name'] : 'Course Details';
                             <div class="course-code"><?= sanitizeInput($course['course_code']) ?></div>
                             <div class="course-name"><?= sanitizeInput($course['course_name']) ?></div>
                         </div>
-                        <div class="col-md-4 text-end">
+                        <div class="col-12 col-lg-4 text-end">
                             <?php if (!isAdmin()): ?>
                                 <?php if ($is_enrolled): ?>
                                     <span class="badge bg-success fs-6">
@@ -113,7 +113,7 @@ $page_title = isset($course) ? $course['course_name'] : 'Course Details';
 
     <!-- Course Information -->
     <div class="row mb-4">
-        <div class="col-md-8">
+        <div class="col-12 col-lg-8">
             <div class="card">
                 <div class="card-header">
                     <h5><i class="fas fa-info-circle me-2"></i>Course Information</h5>
@@ -170,7 +170,7 @@ $page_title = isset($course) ? $course['course_name'] : 'Course Details';
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-header">
                     <h5><i class="fas fa-chart-bar me-2"></i>Course Statistics</h5>
