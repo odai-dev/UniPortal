@@ -105,6 +105,16 @@ if ($_POST) {
     <!-- Custom CSS -->
     <link href="style.css" rel="stylesheet">
     <link href="captcha.css" rel="stylesheet">
+    
+    <!-- Theme Initialization - Load before body to prevent flash -->
+    <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
 </head>
 <body>
 
