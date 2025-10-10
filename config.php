@@ -1,5 +1,5 @@
 <?php
-define('SITE_NAME', 'University Student Portal');
+define('SITE_NAME', 'جامعة صنعاء - Sana\'a University');
 $domain = $_ENV['REPLIT_DEV_DOMAIN'] ?? 'localhost:5000';
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'https';
 define('SITE_URL', $protocol . '://' . $domain);
@@ -17,6 +17,6 @@ define('ALLOWED_FILE_TYPES', ['pdf', 'doc', 'docx', 'txt']);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-date_default_timezone_set('America/New_York');
+date_default_timezone_set('Asia/Aden'); // Yemen timezone
 
 ?>
