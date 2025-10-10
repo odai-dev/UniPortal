@@ -131,7 +131,7 @@ if (isset($_GET['registered']) && $_GET['registered'] === '1') {
 <body>
 
 <div class="auth-container page-transition">
-    <div class="auth-card col-md-6 col-lg-4">
+    <div class="auth-card">
         <div class="auth-header">
             <i class="fas fa-graduation-cap fa-3x mb-3"></i>
             <h3><?= SITE_NAME ?></h3>
